@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-4">
+<div class="booking-section mt-4">
+    <form action="{% url 'book-hostel' hostel.pk %}" method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary btn-block py-3 font-weight-bold">
+            ⚡ BOOK THIS ROOM NOW
+        </button>
+    </form>
+    <p class="text-muted small text-center mt-2">
+        A notification will be sent to the manager.
+    </p>
+</div>    
+    <div class="row no-gutters shadow-lg rounded overflow-hidden bg-dark border border-secondary mb-5">
+
+        
+        
+        <div class="col-lg-8">
+            <div class="position-relative">
+                <img src="{{ hostel.main_photo.url }}" class="img-fluid" style="width: 100%; height: 500px; object-fit: cover;">
+                <div class="position-absolute" style="top: 20px; left: 20px;">
+                    <span class="badge badge-success px-3 py-2" style="font-size: 1.2rem;">UGX {{ hostel.price_per_semester }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 d-flex flex-column p-4 border-left border-secondary text-white">
+            <h2 class="font-weight-bold mb-1">{{ hostel.name }}</h2>
+            <p class="text-info small mb-4">📍 {{ hostel.distance_from_campus }}m from Gulu University</p>
+            
+            <div class="bg-secondary p-3 rounded mb-4">
+                <h6 class="small text-uppercase text-light">Hostel Manager</h6>
+                <div class="d-flex align-items-center mt-2">
+                    <div class="bg-primary rounded-circle mr-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <p class="mb-0 font-weight-bold">{{ hostel.manager.username }}</p>
+                        <a href="tel:{{ hostel.manager_phone }}" class="text-info small">{{ hostel.manager_phone }}</a>
+                    </div>
+                </div>
+            </div>
+
+            <a href="tel:{{ hostel.manager_phone }}" class="btn btn-success btn-block py-3 mb-2 font-weight-bold">📞 CALL TO BOOK</a>
+            <a href="https://wa.me/{{ hostel.manager_phone }}" class="btn btn-outline-success btn-block py-2">WhatsApp</a>
+            
+            <div class="mt-4">
+                <p class="text-secondary small">{{ hostel.description }}</p>
+                <span class="badge {% if hostel.is_quiet %}badge-info{% else %}badge-warning{% endif %}">
+                    {% if hostel.is_quiet %}Quiet Environment{% else %}Social Environment{% endif %}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <h4 class="text-white border-bottom border-secondary pb-2 mb-4">Internal View & Facilities</h4>
+    <div class="row">
+        {% if hostel.room_photo %}
+        <div class="col-md-4 mb-4">
+            <div class="card bg-dark border-secondary overflow-hidden h-100">
+                <img src="{{ hostel.room_photo.url }}" class="card-img-top" style="height: 250px; object-fit: cover;">
+                <div class="card-body py-2 text-center text-white"><small>Bedroom Area</small></div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if hostel.bath_photo %}
+        <div class="col-md-4 mb-4">
+            <div class="card bg-dark border-secondary overflow-hidden h-100">
+                <img src="{{ hostel.bath_photo.url }}" class="card-img-top" style="height: 250px; object-fit: cover;">
+                <div class="card-body py-2 text-center text-white"><small>Bathroom/Toilet</small></div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if hostel.compound_photo %}
+        <div class="col-md-4 mb-4">
+            <div class="card bg-dark border-secondary overflow-hidden h-100">
+                <img src="{{ hostel.compound_photo.url }}" class="card-img-top" style="height: 250px; object-fit: cover;">
+                <div class="card-body py-2 text-center text-white"><small>Compound & Security</small></div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

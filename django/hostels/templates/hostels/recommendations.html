@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5">
+    <h2 class="text-white text-center mb-5 fw-bold">Compatible Roommates</h2>
+    
+    <div class="d-flex justify-content-center gap-3 mb-4">
+        <a href="{% url 'recommendations' %}" class="btn btn-sm btn-outline-secondary rounded-pill">Show All</a>
+        
+        {% if profile.course %}
+        <a href="?course={{ profile.course }}" class="btn btn-sm btn-outline-info rounded-pill">
+            Only {{ profile.course }} Students
+        </a>
+        {% endif %}
+    </div>
+    
+    <div class="row">
+        {% for match in matches %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card bg-dark text-white border-secondary h-100 shadow-lg" style="border-radius: 20px;">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                            <i class="fas fa-user text-white"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-0 fw-bold">{{ match.user.username }}</h5>
+                            <small class="text-info">{{ match.details.course }}</small>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="small text-muted">Compatibility Score</span>
+                        <span class="fw-bold text-success">{{ match.score }}%</span>
+                    </div>
+                    
+                    <div class="progress mb-3" style="height: 6px; background: #222;">
+                        <div class="progress-bar bg-success" style="width: {{ match.score }}%"></div>
+                    </div>
+
+                    <h6 class="small text-uppercase fw-bold text-muted mb-2">Common Traits:</h6>
+                    <div class="d-flex flex-wrap gap-2 mb-4">
+                        {% for trait in match.details.traits %}
+                            <span class="badge bg-secondary bg-opacity-25 border border-secondary small">{{ trait }}</span>
+                        {% endfor %}
+                    </div>
+                    
+                    <button class="btn btn-sm btn-success w-100 rounded-pill">Connect Now</button>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+            <div class="text-center text-muted py-5">
+                <p>No compatible roommates found in this category.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

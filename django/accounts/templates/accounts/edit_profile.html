@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card bg-dark text-white border-0 shadow-lg" style="border-radius: 15px;">
+                <div class="card-body p-5">
+                    <h2 class="text-center fw-bold mb-5">Update Your Profile</h2>
+                    
+                    {% if form.errors %}
+                        <div class="alert alert-danger bg-danger text-white border-0 small">
+                            {{ form.errors }}
+                        </div>
+                    {% endif %}
+
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6 pe-md-4 border-end border-secondary">
+                                <div class="mb-4 custom-field">
+                                    <label class="small text-muted"><i class="fas fa-graduation-cap me-2"></i>Course of Study</label>
+                                    {{ form.course }}
+                                </div>
+                                <div class="mb-4 custom-field">
+                                    <label class="small text-muted"><i class="fas fa-phone me-2"></i>Phone Number</label>
+                                    {{ form.phone }}
+                                </div>
+                                <div class="mb-4 custom-field">
+                                    <label class="small text-muted"><i class="fas fa-map-marker-alt me-2"></i>Home Region</label>
+                                    {{ form.region }}
+                                </div>
+                                <div class="mb-4 custom-field">
+                                    <label class="small text-muted"><i class="fas fa-pray me-2"></i>Religion</label>
+                                    {{ form.religion }}
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 ps-md-4">
+                                <div class="mb-4 custom-field">
+                                    <label class="small text-muted"><i class="fas fa-book me-2"></i>Study Habit</label>
+                                    {{ form.study_habit }}
+                                </div>
+                                <div class="mb-4 custom-field">
+                                    <label class="small text-muted"><i class="fas fa-broom me-2"></i>Cleanliness Level</label>
+                                    {{ form.cleanliness }}
+                                </div>
+                                <div class="mb-4 custom-field">
+                                    <label class="small text-muted"><i class="fas fa-heart me-2"></i>Hobbies</label>
+                                    {{ form.hobbies }}
+                                </div>
+                                
+                                <div class="form-check form-switch mt-4 p-3 border rounded border-secondary">
+                                    <label class="form-check-label small text-white" for="id_is_early_bird">
+                                        <i class="fas fa-sun me-2 text-warning"></i>Are you an Early Bird?
+                                    </label>
+                                    {{ form.is_early_bird }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-5">
+                            <button type="submit" class="btn btn-registration w-100 py-3 fw-bold text-white">
+                                SAVE PREFERENCES & VIEW MATCHES
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Styling to match your underlined reference */
+    .custom-field {
+        border-bottom: 1px solid #495057;
+        margin-bottom: 1.5rem;
+    }
+    .custom-field input, .custom-field select, .custom-field textarea {
+        background: transparent !important;
+        border: none !important;
+        color: white !important;
+        width: 100%;
+        padding: 8px 0;
+        outline: none !important;
+    }
+    .btn-registration {
+        background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%);
+        border-radius: 50px;
+        border: none;
+        letter-spacing: 1px;
+    }
+    .form-check-input:checked {
+        background-color: #38ef7d;
+        border-color: #38ef7d;
+    }
+</style>
+{% endblock %}

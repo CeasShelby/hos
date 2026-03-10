@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="col-md-5">
+        <div class="card bg-transparent border-0">
+            <div class="card-body p-4">
+                <h1 class="text-center fw-bold mb-5 text-white">Update Profile</h1>
+                
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="mb-4 custom-input-group">
+                        <i class="fas fa-map-marker-alt icon"></i>
+                        {{ form.region }}
+                        <label class="floating-label">Home Region/District</label>
+                    </div>
+
+                    <div class="mb-4 custom-input-group">
+                        <i class="fas fa-pray icon"></i>
+                        {{ form.religion }}
+                        <label class="floating-label">Religion</label>
+                    </div>
+
+                    <div class="mb-4 custom-input-group">
+                        <i class="fas fa-heart icon"></i>
+                        {{ form.hobbies }}
+                        <label class="floating-label">Hobbies (Football, Gaming, etc.)</label>
+                    </div>
+
+                    <div class="mb-4 custom-input-group">
+                        <i class="fas fa-broom icon"></i>
+                        {{ form.cleanliness }}
+                    </div>
+
+                    <button type="submit" class="btn btn-gradient w-100 py-3 mt-4">
+                        UPDATE PREFERENCES
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Styling to match your reference image */
+    .custom-input-group {
+        position: relative;
+        border-bottom: 1.5px solid #6c757d; /* Thin bottom border */
+        display: flex;
+        align-items: center;
+    }
+
+    .custom-input-group .icon {
+        color: #adb5bd;
+        margin-right: 15px;
+        font-size: 1.1rem;
+    }
+
+    .custom-input-group input, .custom-input-group select, .custom-input-group textarea {
+        background: transparent !important;
+        border: none !important;
+        color: white !important;
+        width: 100%;
+        padding: 10px 0;
+        outline: none;
+    }
+
+    /* Floating label effect */
+    .floating-label {
+        position: absolute;
+        left: 35px;
+        top: 10px;
+        color: #6c757d;
+        transition: 0.3s ease all;
+        pointer-events: none;
+    }
+
+    /* Move label up when typing */
+    input:focus ~ .floating-label, input:not(:placeholder-shown) ~ .floating-label {
+        top: -15px;
+        font-size: 0.8rem;
+        color: #00c6ff;
+    }
+
+    /* Gradient button like your image */
+    .btn-gradient {
+        background: linear-gradient(90deg, #3a6073 0%, #3ca55c 100%);
+        border: none;
+        border-radius: 50px;
+        color: white;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    .btn-gradient:hover {
+        transform: scale(1.02);
+        opacity: 0.9;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4 text-white">Available Hostels in Gulu</h2>
+
+    <div class="row">
+        {% for hostel in hostels %}
+            <div class="col-md-4 mb-4">
+                <div class="card bg-dark text-white border-secondary h-100 shadow">
+                    {% if hostel.main_photo %}
+                        <img src="{{ hostel.main_photo.url }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                    {% endif %}
+                    
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h5 class="card-title">{{ hostel.name }}</h5>
+                            <span class="text-success">UGX {{ hostel.price_per_semester }}</span>
+                        </div>
+                        <p class="small text-muted mb-2">
+                            🚶 {{ hostel.distance_from_campus }}m from Campus
+                        </p>
+                        <p class="card-text text-truncate">{{ hostel.description }}</p>
+                        
+                        <a href="{% url 'hostel_detail' hostel.pk %}" class="btn btn-outline-primary btn-block btn-sm">View Details</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted">No hostels found matching your search. Try another location.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
