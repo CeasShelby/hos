@@ -9,54 +9,131 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     
     <style>
-        :root { --gulu-dark: #1b2631; --gulu-nav: #161e27; }
+        :root { --gulu-dark: #1b2631; --gulu-nav: #222; }
         body { font-family: 'Poppins', sans-serif; background-color: var(--gulu-dark); color: #fff; }
-        .navbar { background-color: var(--gulu-nav) !important; border-bottom: 1px solid #2c3e50; }
-        .nav-link { color: #bdc3c7 !important; transition: 0.3s; }
-        .nav-link:hover { color: #fff !important; }
+        
+        /* Floating Pill Navbar Styles */
+        .navbar-floating {
+            background-color: #fff !important;
+            border: 1px solid #eaeaea;
+            border-radius: 50px;
+            margin: 20px auto;
+            max-width: 1000px;
+            padding: 5px 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .nav-link { color: #333 !important; font-weight: 500; font-size: 0.95rem; margin: 0 5px; transition: 0.3s; }
+        .nav-link:hover { color: #000 !important; transform: translateY(-1px); }
+        
+        /* The round circle logo on the left */
+        .nav-brand-circle {
+            background: #111;
+            color: #fff !important;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            text-decoration: none;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+        .nav-brand-circle:hover {
+            transform: scale(1.05);
+            color: #f0f0f0 !important;
+            text-decoration: none;
+        }
+
+        /* The right side pill button */
+        .btn-pill-dark {
+            background: #111 !important;
+            color: #fff !important;
+            border-radius: 50px !important;
+            padding: 8px 25px !important;
+            font-weight: 500 !important;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+        }
+        .btn-pill-dark:hover {
+            background: #000 !important;
+            color: #fff !important;
+            transform: scale(1.02);
+            text-decoration: none;
+        }
+
         .btn-gulu { background-color: #3498db; color: white; border-radius: 20px; padding: 5px 20px; }
         /* Auto-hide message style */
         .alert-floating { position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 300px; }
+        
+        /* Mobile adjustment to pill shape */
+        @media (max-width: 991px) {
+            .navbar-floating { border-radius: 20px; max-width: 95%; margin: 15px auto; padding: 10px 20px; }
+            .navbar-collapse { padding-top: 15px; }
+        }
     </style>
 </head>
 <body>
 
-   <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
-  <div class="container">
-    <a class="navbar-brand fw-bold" href="{% url 'hostel-index' %}">🏢 HostelHub</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+   <nav class="navbar navbar-expand-lg navbar-light navbar-floating">
+  <div class="container-fluid">
+    <!-- Circular Brand Logo like the white planet icon in the request -->
+    <a class="nav-brand-circle me-3" href="{% url 'hostel-index' %}" title="HostelHub">
+        
+    </a>
+    
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
     
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav me-auto">
-        <li class="nav-item"><a class="nav-link" href="{% url 'hostel-index' %}">Browse Hostels</a></li>
+    <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+      <ul class="navbar-nav mx-auto text-center">
+        <li class="nav-item"><a class="nav-link" href="{% url 'hostel-index' %}">Hostels</a></li>
         {% if user.is_authenticated %}
         <li class="nav-item"><a class="nav-link" href="{% url 'recommendations' %}">My Matches</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'my-bookings' %}">My Bookings</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'my-bookings' %}">Bookings</a></li>
+        <li class="nav-item">
+            <a class="nav-link position-relative px-3" href="{% url 'proposals_inbox' %}">
+                <i class="fas fa-inbox"></i> Inbox
+                {% if pending_proposals_count > 0 %}
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger shadow-sm" 
+                          style="font-size: 0.65rem; padding: 0.35em 0.5em;">
+                        {{ pending_proposals_count }}
+                    </span>
+                {% endif %}
+            </a>
+        </li>
         {% endif %}
       </ul>
 
-      <ul class="navbar-nav ms-auto">
+      <ul class="navbar-nav ms-auto text-center mt-3 mt-lg-0 align-items-center">
         {% if user.is_authenticated %}
          <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Hello, {{ user.username }}
-    </a>
-    <ul class="dropdown-menu dropdown-menu-end bg-dark border-secondary" aria-labelledby="navbarDropdown">
-        <li><a class="dropdown-item text-white" href="{% url 'edit-profile' %}">Edit Preferences</a></li>
-        <li><hr class="dropdown-divider border-secondary"></li>
-        <li>
-            <form action="{% url 'logout' %}" method="post" class="px-3">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-link text-danger p-0 text-decoration-none">Logout</button>
-            </form>
+            <a class="nav-link dropdown-toggle btn-pill-dark d-inline-flex px-4" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {{ user.username|truncatechars:15 }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end bg-white border-secondary mt-2 shadow" aria-labelledby="navbarDropdown" style="border-radius: 15px;">
+                <li><a class="dropdown-item text-dark" href="{% url 'edit-profile' %}">Edit Profile</a></li>
+                <li><hr class="dropdown-divider border-secondary"></li>
+                <li>
+                    <form action="{% url 'logout' %}" method="post" class="px-3">
+                        {% csrf_token %}
+                        <button type="submit" class="dropdown-item text-danger p-0 bg-transparent">Logout</button>
+                    </form>
+                </li>
+            </ul>
         </li>
-    </ul>
-</li>
         {% else %}
-          <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
-          <li class="nav-item"><a class="btn btn-light ms-lg-2" href="{% url 'register' %}">Join Now</a></li>
+          <li class="nav-item ms-lg-2 m-1">
+            <a class="btn-pill-dark d-inline-block text-center" href="{% url 'login' %}">Log In</a>
+          </li>
+          <li class="nav-item ms-lg-2 m-1">
+            <a class="btn-pill-dark d-inline-block text-center" href="{% url 'register' %}">Register</a>
+          </li>
         {% endif %}
       </ul>
     </div>

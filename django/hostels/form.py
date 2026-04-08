@@ -1,5 +1,5 @@
 from django import forms
-from .models import Hostel
+from .models import Hostel, Booking
 
 class HostelForm(forms.ModelForm):
     class Meta:
@@ -16,4 +16,17 @@ class HostelForm(forms.ModelForm):
             for field in ['name', 'price_per_semester', 'distance_from_campus']
         }
 
+
+class BookingForm(forms.ModelForm):
+    class Meta:
+        model = Booking
+        fields = ['room_type', 'wants_roommate']
+        widgets = {
+            'room_type': forms.Select(attrs={'class': 'form-select'}),
+            'wants_roommate': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+        labels = {
+            'room_type': 'Room type',
+            'wants_roommate': 'I want a roommate (double room only)',
+        }
 

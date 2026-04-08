@@ -5,8 +5,9 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .form import RegisterForm
 from .models import Profile 
+from hostels.models import Booking
 from django.contrib.auth.decorators import login_required
-from .form import ProfileUpdateForm # We will create this next
+from .form import CombinedProfilePreferenceForm
 # Create your views here.
 
 
@@ -72,19 +73,31 @@ def edit_profile(request):
     profile, created = Profile.objects.get_or_create(user=request.user)
     
     if request.method == 'POST':
-        form = ProfileUpdateForm(request.POST, instance=profile)
+        form = CombinedProfilePreferenceForm(request.POST, instance=profile)
         if form.is_valid():
             form.save()
-            # CHANGE THIS: Redirect straight to the matching page
+            messages.success(request, "Your profile and roommate preferences were updated.")
             return redirect('recommendations') 
         else:
             # If the form is NOT valid, this will help us see the errors in the terminal
             print(form.errors) 
     else:
-        form = ProfileUpdateForm(instance=profile)
+        form = CombinedProfilePreferenceForm(instance=profile)
         
     return render(request, 'accounts/edit_profile.html', {'form': form})
 
 def logout_view(request):
     logout(request)
     return redirect('hostel-index')
+
+@login_required
+def update_preferences(request):
+    # Preferences are now part of the unified profile page.
+    booked_hostel = Booking.objects.filter(
+        student=request.user,
+        status__in=['Pending', 'Paid'],
+    ).exists()
+    if not booked_hostel:
+        messages.info(request, "You need to book a hostel before filling roommate preferences.")
+        return redirect('recommendations')
+    return redirect('edit-profile')

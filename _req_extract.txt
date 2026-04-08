@@ -1,0 +1,507 @@
+LinkStay| System Requirements Specification Project Group 6
+System Requirements Specification
+LinkStay: Digital Portal for Algorithmic Roommate Matching
+Department of Computer Science | Gulu University
+S/No Name Registration Number
+1 Gum Joseph Gift 24/U/2377/GCS/PS
+2 Makpwe Ceaser Kilama 24/U/2871/GCS/PS
+3 Adikini Synthar Mary 24/U/1285/GCS/PS
+4 Safi Albert 24/U/4070/GCS/PS
+| March 2026
+Priority levels: HIGH= Must haveMEDIUM= Should haveLOW= Nice to
+have
+ID prefixes: FR= FunctionalNFR= Non-FunctionalTR= TechnicalNTR=
+Non-Technical
+1 System Description
+1.1 Background and Problem Statement
+Gulu University relies heavily on privately-owned community hostels to house its stu-
+dent population. Because the university cannot accommodate all students on-campus,
+thousands of students — many travelling from across Uganda or from across interna-
+tional borders — must independently navigate the local housing market upon admission
+or transfer. Conventional roommate selection methods, including word-of-mouth re-
+ferrals, social media listings, and random assignments, consistently fail to account
+for socio-behavioural compatibility. Mismatches in lifestyle variables such as sleep
+schedules, study habits, cleanliness standards, and social preferences generate persistent
+interpersonal conflict, which adversely affects academic performance and overall student
+wellbeing (Kigundu, 2014). This situation is further at odds with the obligation imposed
+on higher education institutions by theUniversities and Other Tertiary Institutions
+Act (Republic of Uganda, 2001)to maintain a conducive environment for learning.
+Gulu University — Dept. of Computer Science 1 March 2026
+LinkStay| System Requirements Specification Project Group 6
+1.2 Proposed Solution
+LinkStay is a centralised, browser-based web portal designed to replace the trial-and-
+error roommate selection process with a transparent, data-driven matching system.
+The portal collects structured lifestyle preference data from students through an
+onboarding survey and applies a two-tier algorithmic engine to generate compatibility-
+based roommate recommendations. In the first tier, aWeighted Sum Model (WSM)
+quantifies the degree of lifestyle alignment between every pair of registered students
+by computing a weighted composite score across key behavioural variables. In the
+second tier, theGale-Shapley Stable Matching Algorithm(Gale & Shapley, 1962)
+processes those scores as preference rankings to produce a set of mathematically stable
+pairings — pairings in which no two students would mutually prefer an alternative
+arrangement over the one assigned by the system. The result is a roommate allocation
+process grounded in mathematical stability and socio-behavioural alignment rather
+than chance.
+1.3 System Scope
+LinkStay is geographically scoped to students residing in gazetted private hostels within
+Gulu City and is functionally limited to compatibility-based roommate matching. The
+system does not extend to rent payment processing, landlord property administration,
+or full hostel management operations. It is a standalone web application and does not
+integrate with Gulu University’s existing academic management systems in this first
+release.
+1.4 Users of the System
+The system serves three distinct user classes.Student usersare the primary consumers
+of the matching service; they register, complete the preference survey, and receive
+ranked roommate recommendations.The system administratoris a designated
+university staff member or project team member responsible for monitoring registrations,
+managing accounts, and overseeing matching runs via an administrative dashboard.
+Academic supervisors and evaluatorsinteract with the system through summary
+reports and dashboard views to assess algorithmic performance and system outcomes.
+1.5 Technology Overview
+LinkStay is built on thePythonprogramming language using theDjangoweb
+framework, with aMySQLrelational database for persistent storage. The frontend
+usesHTML5,CSS3,Bootstrap 5, andJavaScriptto deliver a responsive, low-
+bandwidth-friendly interface accessible from any modern web browser. Development
+follows theAgile Scrummethodology with iterative sprints, enabling continuous
+refinement of both the interface and the matching algorithm throughout the project
+lifecycle.
+Gulu University — Dept. of Computer Science 2 March 2026
+LinkStay| System Requirements Specification Project Group 6
+2 Functional Requirements
+Functional requirements define the specific behaviours and operations the LinkStay
+system must perform to fulfil its purpose of algorithmic roommate matching.
+2.1 User Registration and Authentication
+ID Requirement Description Priority
+FR-01 The system shall allow a new student to register using a
+valid email address and a password satisfying minimum
+security criteria: at least 8 characters, one uppercase letter,
+one numeral, and one special character.
+HIGH
+FR-02 The system shall send a verification email upon registration.
+The account shall remain inactive until the student confirms
+their email address via the provided link.
+HIGH
+FR-03 The system shall authenticate registered students using an
+email address and password combination, managed through
+Django’s built-in authentication framework.
+HIGH
+FR-04 The system shall provide a self-service password reset mech-
+anism that delivers a time-limited reset link (valid for 24
+hours) to the user’s registered email address.
+MEDIUM
+FR-05 The system shall automatically terminate an authenticated
+session after 30 consecutive minutes of user inactivity and
+redirect the user to the login page.
+MEDIUM
+2.2 User Profile Management
+ID Requirement Description Priority
+FR-06 Upon first login, the system shall require each student to
+complete an onboarding profile capturing: full name, gender,
+age, course of study, year of study, and preferred hostel
+area within Gulu City. The student shall not access the
+recommendation dashboard until the profile is complete.
+HIGH
+FR-07 The system shall allow users to upload a profile photograph
+in JPEG or PNG format, with a maximum file size of 2 MB.
+A default placeholder image shall be used if no photo is
+uploaded.
+HIGH
+Gulu University — Dept. of Computer Science 3 March 2026
+LinkStay| System Requirements Specification Project Group 6
+(continued from previous page)
+ID Requirement Description Priority
+FR-08 The system shall allow an authenticated user to update
+any field in their profile at any time. Changes to lifestyle
+preference fields shall trigger recomputation of the user’s
+compatibility scores within 24 hours.
+HIGH
+2.3 Lifestyle Preference Survey
+ID Requirement Description Priority
+FR-09 The system shall present each new user with a structured
+Lifestyle Preference Survey covering at minimum: (a) sleep
+schedule, (b) study habit preference, (c) cleanliness stan-
+dard, (d) social activity preference, (e) noise tolerance, (f)
+smoking status, and (g) gender preference for roommate.
+HIGH
+FR-10 The system shall require users to assign an importance
+weight to each lifestyle variable on a five-point Likert scale
+(1 = Not Important; 5 = Extremely Important). These
+weights shall feed directly into the Weighted Sum Model
+computation.
+HIGH
+FR-11 The system shall provide an optional free-text field (maxi-
+mum 300 characters) for a short personality self-description
+to supplement algorithmic matching with qualitative con-
+text.
+MEDIUM
+FR-12 The system shall allow users to retake or update their
+Lifestyle Preference Survey at any time. Affected compat-
+ibility scores shall be recomputed within 24 hours of any
+update.
+MEDIUM
+2.4 Compatibility Scoring — Weighted Sum Model
+ID Requirement Description Priority
+FR-13 The system shall compute a pairwise compatibility scoreCij
+for every pair of registered, survey-complete students(i, j)
+using: Cij = Pn
+k=1 wk ·x ijk, where wk is the importance
+weight for variablek and xijk ∈ [0, 1]is the normalised
+compatibility value for that variable.
+HIGH
+Gulu University — Dept. of Computer Science 4 March 2026
+LinkStay| System Requirements Specification Project Group 6
+(continued from previous page)
+ID Requirement Description Priority
+FR-14 The system shall store all computed compatibility scores
+in the database, indexed on both student identifiers, for
+efficient retrieval during recommendation generation.
+HIGH
+FR-15 The system shall normalise all survey input variables to the
+range[0 , 1]prior to WSM computation to prevent variables
+with larger numerical ranges from disproportionately influ-
+encing scores.
+MEDIUM
+2.5 Stable Roommate Pairing — Gale-Shapley Algorithm
+ID Requirement Description Priority
+FR-16 The system shall use WSM-derived compatibility scores as
+preference rankings and execute the Gale-Shapley Stable
+Matching Algorithm to produce roommate pairings in which
+no blocking pairs exist.
+HIGH
+FR-17 Following every matching run, the system shall program-
+matically verify that the output contains no blocking pairs
+— defined as two students(i, j)not matched to each other
+who both rank each other above their assigned roommates.
+Any instability detected shall be logged and flagged to the
+administrator.
+HIGH
+FR-18 The system shall initiate a matching run when: (a) the num-
+ber of unmatched, survey-complete students increases by 10
+or more; (b) the administrator manually triggers a run; or
+(c) the nightly scheduled batch process executes.
+MEDIUM
+2.6 Roommate Recommendation Display
+ID Requirement Description Priority
+FR-19 The system shall display to each logged-in student a ranked
+list of up to ten compatible roommate candidates, ordered
+by descending compatibility score, showing each candidate’s
+name, profile photo, top three lifestyle attributes, and com-
+patibility score as a percentage.
+HIGH
+Gulu University — Dept. of Computer Science 5 March 2026
+LinkStay| System Requirements Specification Project Group 6
+(continued from previous page)
+ID Requirement Description Priority
+FR-20 The system shall visually distinguish the algorithmically as-
+signed stable match (Gale-Shapley output) from the broader
+compatibility-ranked candidate list (WSM output) on the
+recommendation dashboard.
+MEDIUM
+FR-21 The system shall allow a student to mark any recommended
+candidate as “Interested” or “Not Interested.” This feedback
+shall be recorded for future algorithm refinement.
+LOW
+2.7 In-Portal Communication
+ID Requirement Description Priority
+FR-22 The system shall provide a basic in-portal messaging facility
+allowing two students who appear on each other’s recom-
+mendation lists to exchange text messages without exposing
+personal contact details.
+MEDIUM
+FR-23 The system shall send an email notification to a user when
+they receive a new in-portal message, provided that email
+notifications are enabled in the user’s account settings.
+LOW
+2.8 Administrator Functions
+ID Requirement Description Priority
+FR-24 The system shall provide a dashboard accessible exclusively
+to Admin-role accounts, displaying: total registered users,
+number of completed surveys, number of active matched
+pairs, and a log of the five most recent matching runs.
+HIGH
+FR-25 The system shall allow the administrator to view, deacti-
+vate, or permanently delete any student account.
+HIGH
+FR-26 The system shall allow the administrator to manually trig-
+ger a matching run and to download the results of any run
+as a CSV file for offline review.
+MEDIUM
+FR-27 The system shall maintain a timestamped audit log of all
+administrator actions — including logins, account modifica-
+tions, and matching run triggers — accessible only to the
+administrator.
+MEDIUM
+Gulu University — Dept. of Computer Science 6 March 2026
+LinkStay| System Requirements Specification Project Group 6
+3 Non-Functional Requirements
+Non-functional requirements define the quality attributes that govern how well the
+system performs its functions.
+3.1 Performance
+ID Requirement Description Priority
+NFR-01 The system shall return any student-facing page, including
+the recommendation dashboard, within3 secondsof the
+HTTP request being received, under normal load of up to
+50 concurrent users.
+HIGH
+NFR-02 The WSM compatibility matrix computation across a
+dataset of up to 500 student profiles shall complete within
+60 secondson the designated server hardware.
+HIGH
+NFR-03 The Gale-Shapley matching run for a pool of up to 500 stu-
+dents shall complete within5 minutes, including stability
+verification.
+MEDIUM
+3.2 Reliability and Availability
+ID Requirement Description Priority
+NFR-04 The system shall maintain a minimum uptime of99%
+during active academic semester periods, excluding pre-
+announced scheduled maintenance windows not exceeding 2
+hours per week.
+HIGH
+NFR-05 The system shall perform automated full database backups
+every24 hours, stored securely and retained for a mini-
+mum of 30 days.
+HIGH
+NFR-06 In the event of a system failure during a matching run, the
+system shall roll back all changes to the last stable state
+and log the error without corrupting any existing match or
+user data.
+MEDIUM
+3.3 Security
+Gulu University — Dept. of Computer Science 7 March 2026
+LinkStay| System Requirements Specification Project Group 6
+ID Requirement Description Priority
+NFR-07 All data transmitted between client and server shall be en-
+crypted usingHTTPS enforced via TLS 1.2 or higher.
+Unencrypted HTTP connections shall be automatically redi-
+rected to HTTPS.
+HIGH
+NFR-08 All user passwords shall be stored as salted cryptographic
+hashes usingPBKDF2-SHA256, as provided by Django’s
+default password hashing backend. Plain-text passwords
+shall never be stored.
+HIGH
+NFR-09 The system shall applyCross-Site Request Forgery
+(CSRF) protectionto all state-changing HTTP requests
+using Django’s built-in CSRF middleware.
+HIGH
+NFR-10 The system shall validate and sanitise all user-supplied in-
+puts server-side to prevent SQL injection, cross-site script-
+ing (XSS), and other injection attacks. Client-side valida-
+tion shall serve as a usability aid only and shall not replace
+server-side checks.
+HIGH
+NFR-11 Student personal data shall be accessible only to: (a) the
+student themselves, (b) their matched roommate via a re-
+stricted profile view, and (c) the system administrator. No
+other user class shall have access.
+MEDIUM
+3.4 Usability
+ID Requirement Description Priority
+NFR-12 A first-time student user shall be able to complete registra-
+tion, the Lifestyle Preference Survey, and view initial recom-
+mendations within15 minutes, without external assistance
+or training.
+HIGH
+NFR-13 The user interface shall conform toWCAG 2.1 Level AA
+accessibility guidelines, including sufficient colour contrast,
+full keyboard navigability, and descriptive alternative text
+for all non-decorative images.
+MEDIUM
+NFR-14 All error messages displayed to users shall be written in
+plain, non-technical English and shall include actionable
+guidance describing how the user can resolve the issue.
+MEDIUM
+3.5 Scalability and Maintainability
+Gulu University — Dept. of Computer Science 8 March 2026
+LinkStay| System Requirements Specification Project Group 6
+ID Requirement Description Priority
+NFR-15 The system architecture shall support horizontal scaling to
+accommodate up to2,000 concurrent registered users
+without requiring a redesign of the core application layer.
+MEDIUM
+NFR-16 The database schema and application structure shall be
+designed to accommodate extension to additional universi-
+ties or hostel networks in future versions without requiring
+destructive migrations.
+LOW
+NFR-17 All Python source code shall adhere to thePEP 8style
+guide. All functions, classes, and modules shall include doc-
+strings describing purpose, parameters, and return values.
+MEDIUM
+NFR-18 The WSM and Gale-Shapley algorithm implementations
+shall each be encapsulated in separate, independently
+testable Python classes to facilitate unit testing and allow
+future algorithm substitution without affecting other compo-
+nents.
+MEDIUM
+4 Technical Requirements
+Technical requirements specify the implementation environment, technology choices,
+and infrastructure constraints within which the system must be built.
+4.1 Technology Stack
+ID Requirement Description Priority
+TR-01 The system shall be developed usingPython 3.11+and
+theDjango 4.xweb framework, chosen for its built-in
+ORM, CSRF middleware, authentication system, and ad-
+ministration interface.
+HIGH
+TR-02 The system shall useMySQL 8.0+as its relational
+database management system, accessed exclusively through
+the Django ORM. Raw SQL shall not be used except where
+required for performance-critical reporting.
+HIGH
+TR-03 The client-side interface shall be implemented using
+HTML5,CSS3,Bootstrap 5, andJavaScript (ES6+)
+to ensure a responsive, cross-browser-compatible user inter-
+face.
+HIGH
+Gulu University — Dept. of Computer Science 9 March 2026
+LinkStay| System Requirements Specification Project Group 6
+(continued from previous page)
+ID Requirement Description Priority
+TR-04 The production deployment shall useNginxas the reverse
+proxy andGunicornas the WSGI application server, run-
+ning on anUbuntu 22.04 LTSLinux server.
+MEDIUM
+TR-05 All source code shall be managed usingGit, hosted on
+GitHub or GitLab, with separate branches for development,
+staging, and production environments.
+MEDIUM
+4.2 Algorithm Implementation
+ID Requirement Description Priority
+TR-06 The WSM computation shall be implemented as a Python
+class named CompatibilityEngine. It shall accept a matrix
+of student preference vectors as input, return a symmetric
+compatibility score matrix, and carry no direct ORM depen-
+dencies to enable isolated unit testing.
+HIGH
+TR-07 The Gale-Shapley algorithm shall be implemented as a sep-
+arate Python class namedMatchingEngine. It shall accept
+the compatibility score matrix fromCompatibilityEngine
+and return a dictionary mapping each student identifier to
+their stable roommate match.
+HIGH
+TR-08 All user authentication, session management, and
+permission handling shall use Django’s built-in
+django.contrib.authmodule exclusively.
+HIGH
+TR-09 All scheduled and long-running tasks — including nightly
+matching runs and backup triggers — shall be man-
+aged usingCelerywith aRedismessage broker, or the
+django-crontab package, to avoid blocking the main web
+process.
+MEDIUM
+4.3 Database Requirements
+ID Requirement Description Priority
+TR-10 The database shall implement at minimum the following en-
+tities: Student, LifestyleProfile, CompatibilityScore,
+MatchResult, Message, and AdminLog. All inter-entity rela-
+tionships shall be enforced through foreign key constraints.
+HIGH
+Gulu University — Dept. of Computer Science 10 March 2026
+LinkStay| System Requirements Specification Project Group 6
+(continued from previous page)
+ID Requirement Description Priority
+TR-11 The CompatibilityScore table shall store scores as
+floating-point values in the range[0.0, 100.0]and shall main-
+tain composite indexes on both participating student foreign
+keys to support efficient recommendation retrieval.
+HIGH
+TR-12 The system shall expose aRESTful APIusing the
+Django REST Framework (DRF), providing endpoints
+for the recommendation engine and user profile data, to
+enable future integration with a mobile application or third-
+party services.
+MEDIUM
+4.4 Hardware Requirements
+Component Minimum Recommended
+Server CPU 2 cores, 2.0 GHz 4 cores, 2.5 GHz
+Server RAM 4 GB 8 GB
+Storage 20 GB SSD 50 GB SSD
+Network 10 Mbps uplink 100 Mbps uplink
+Client Device Any device with a modern web browser and internet
+access
+5 Non-Technical Requirements
+Non-technical requirements address the legal, ethical, organisational, and contextual
+constraints under which the system must operate, independent of technology choices.
+5.1 Legal and Regulatory Requirements
+ID Requirement Description Priority
+NTR-01 The system shall operate in full compliance with the
+Uganda Data Protection and Privacy Act, 2019, en-
+suring student personal data is collected only for the stated
+purpose, not disclosed to unauthorised parties, and retained
+only as long as necessary.
+HIGH
+NTR-02 The system shall operate in accordance with theUniversi-
+ties and Other Tertiary Institutions Act (Republic
+of Uganda, 2001), which mandates that higher education
+institutions maintain a conducive environment for learning.
+HIGH
+Gulu University — Dept. of Computer Science 11 March 2026
+LinkStay| System Requirements Specification Project Group 6
+(continued from previous page)
+ID Requirement Description Priority
+NTR-03 The system shall present each student with a clearPrivacy
+Notice and Informed Consent Statementduring regis-
+tration, stating what data is collected, how it is used, how
+long it is retained, and with whom it may be shared. Ac-
+count creation shall require affirmative acceptance.
+HIGH
+5.2 Ethical Requirements
+ID Requirement Description Priority
+NTR-04 The matching algorithm shall not use race, ethnicity, reli-
+gion, tribe, or disability as matching criteria. Gender prefer-
+ence shall be captured only as a student-declared personal
+preference and shall not be used to exclude any student
+from registering or receiving recommendations.
+HIGH
+NTR-05 The system shall provide equal access to all registered stu-
+dents regardless of course of study, year of study, or aca-
+demic performance. No student’s recommendation list shall
+be suppressed based on non-lifestyle factors.
+MEDIUM
+NTR-06 The system shall present each student with a plain-language
+explanation of how their compatibility scores were com-
+puted, including the weights they assigned and how those
+weights influenced their ranked recommendations.
+MEDIUM
+5.3 Organisational and Academic Requirements
+ID Requirement Description Priority
+NTR-07 The system shall be developed and delivered within the
+2025/2026 academic year project cycle at Gulu University.
+A fully functional pilot deployment ready for User Accep-
+tance Testing shall be available by the end of Semester 2.
+HIGH
+NTR-08 All source code, documentation, database migration scripts,
+and project artefacts shall be maintained in a version-
+controlled repository accessible to all Group 6 members
+and the project supervisor throughout the project lifecycle.
+HIGH
+Gulu University — Dept. of Computer Science 12 March 2026
+LinkStay| System Requirements Specification Project Group 6
+(continued from previous page)
+ID Requirement Description Priority
+NTR-09 A User Manual shall be produced covering student registra-
+tion, survey completion, interpretation of recommendations,
+and use of the messaging feature. The manual shall be writ-
+ten in plain English and shall not exceed 10 pages.
+MEDIUM
+NTR-10 Any change to requirements that alters the system scope,
+matching algorithm design, or technology stack shall be re-
+viewed and approved by the project supervisor, Dr. Olango
+Proscovia, before implementation.
+MEDIUM
+5.4 Cultural and Contextual Requirements
+ID Requirement Description Priority
+NTR-11 The user interface shall useEnglishexclusively, consistent
+with the medium of instruction at Gulu University. All la-
+bels, instructions, and error messages shall avoid culturally
+insensitive imagery or terminology.
+MEDIUM
+NTR-12 The system shall be optimised for low-bandwidth network
+conditions. The total page weight (HTML, CSS, JavaScript,
+and images combined) shall not exceed500 KB per page
+load, enabling reasonable performance on typical Ugandan
+mobile data connections.
+MEDIUM
+Gulu University — Dept. of Computer Science 13 March 2026

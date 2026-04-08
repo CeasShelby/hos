@@ -52,3 +52,56 @@ class ProfileUpdateForm(forms.ModelForm):
             'study_habit': forms.Select(attrs={'class': 'form-select'}),
         }
     
+
+CHOICES = [(i, str(i)) for i in range(1, 6)] # 1 to 5 scale
+class RoommatePreferenceForm(forms.ModelForm):
+    CHOICES = [(i, str(i)) for i in range(1, 6)] # 1 to 5 scale
+
+    class Meta:
+        model = Profile
+        fields = [
+            'smoking_habit', 'smoking_weight', 
+            'study_time', 'study_weight'
+        ]
+        widgets = {
+            'smoking_habit': forms.Select(choices=CHOICES, attrs={'class': 'form-select bg-dark text-white'}),
+            'smoking_weight': forms.Select(choices=CHOICES, attrs={'class': 'form-select bg-dark text-white'}),
+            'study_time': forms.Select(choices=CHOICES, attrs={'class': 'form-select bg-dark text-white'}),
+            'study_weight': forms.Select(choices=CHOICES, attrs={'class': 'form-select bg-dark text-white'}),
+        }
+        labels = {
+            'smoking_habit': "Are you a smoker? (1: Never, 5: Heavy)",
+            'smoking_weight': "How important is a roommate's smoking habit to you? (1: Don't care, 5: Deal-breaker)",
+            'study_time': "When do you study? (1: Early Bird, 5: Night Owl)",
+            'study_weight': "How important is sharing a study schedule? (1: Don't care, 5: Critical)",
+        }
+
+
+class CombinedProfilePreferenceForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = [
+            'phone', 'religion', 'region', 'hobbies',
+            'cleanliness', 'course', 'study_habit', 'is_early_bird',
+            'smoking_habit', 'smoking_weight', 'study_time', 'study_weight',
+        ]
+        widgets = {
+            'phone': forms.TextInput(attrs={'class': 'form-control'}),
+            'religion': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. Christian, Muslim'}),
+            'region': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. Central, Northern'}),
+            'hobbies': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'What do you do for fun?'}),
+            'cleanliness': forms.Select(attrs={'class': 'form-select'}),
+            'course': forms.TextInput(attrs={'class': 'form-control'}),
+            'study_habit': forms.Select(attrs={'class': 'form-select'}),
+            'is_early_bird': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'smoking_habit': forms.Select(choices=CHOICES, attrs={'class': 'form-select'}),
+            'smoking_weight': forms.Select(choices=CHOICES, attrs={'class': 'form-select'}),
+            'study_time': forms.Select(choices=CHOICES, attrs={'class': 'form-select'}),
+            'study_weight': forms.Select(choices=CHOICES, attrs={'class': 'form-select'}),
+        }
+        labels = {
+            'smoking_habit': "Are you a smoker? (1: Never, 5: Heavy)",
+            'smoking_weight': "How important is roommate smoking habit?",
+            'study_time': "When do you study? (1: Early Bird, 5: Night Owl)",
+            'study_weight': "How important is sharing study schedule?",
+        }

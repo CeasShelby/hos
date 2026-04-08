@@ -1,0 +1,41 @@
+TABLES:
+- accounts_profile
+- auth_group
+- auth_group_permissions
+- auth_permission
+- auth_user
+- auth_user_groups
+- auth_user_user_permissions
+
+COLUMNS in accounts_profile:
+('id', 'bigint', 'NO', 'PRI', None, 'auto_increment')
+('gender', 'varchar(1)', 'YES', '', None, '')
+('age', 'int', 'YES', '', None, '')
+('course', 'varchar(100)', 'YES', '', None, '')
+('year_of_study', 'int', 'YES', '', None, '')
+('preferred_hostel_area', 'varchar(100)', 'YES', '', None, '')
+('bio', 'longtext', 'NO', '', None, '')
+('profile_picture', 'varchar(100)', 'YES', '', None, '')
+('sleep_schedule', 'int', 'NO', '', None, '')
+('sleep_schedule_weight', 'int', 'NO', '', None, '')
+('study_habit', 'varchar(10)', 'NO', '', '', '')
+('study_habit_weight', 'int', 'NO', '', None, '')
+('cleanliness_weight', 'int', 'NO', '', None, '')
+('social_activity', 'int', 'NO', '', None, '')
+('social_activity_weight', 'int', 'NO', '', None, '')
+('noise_tolerance', 'int', 'NO', '', None, '')
+('noise_tolerance_weight', 'int', 'NO', '', None, '')
+('smoking_status', 'int', 'NO', '', None, '')
+('gender_preference', 'int', 'NO', '', None, '')
+('gender_preference_weight', 'int', 'NO', '', None, '')
+('user_id', 'int', 'NO', 'UNI', None, '')
+('phone', 'varchar(15)', 'YES', '', None, '')
+('cleanliness', 'varchar(10)', 'NO', '', None, '')
+('hobbies', 'longtext', 'NO', '', None, '')
+('region', 'varchar(50)', 'NO', '', None, '')
+('religion', 'varchar(50)', 'NO', '', None, '')
+('is_early_bird', 'tinyint(1)', 'NO', '', None, '')
+('smoking_habit', 'int', 'NO', '', None, '')
+('smoking_weight', 'int', 'NO', '', None, '')
+('study_time', 'int', 'NO', '', None, '')
+('study_weight', 'int', 'NO', '', None, '')

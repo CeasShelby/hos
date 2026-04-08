@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5 mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <div class="card bg-dark border-info p-5 shadow-lg" style="border-radius: 30px;">
+                <div class="display-1 text-info mb-4"><i class="fas fa-clipboard-list"></i></div>
+                <h2 class="text-white fw-bold">Ready to find a roommate?</h2>
+                <p class="text-muted mb-4">
+                    Our stable matching algorithm needs to know your habits and preferences before it can pair you up.
+                </p>
+                <a href="{% url 'update_preferences' %}" class="btn btn-info btn-lg rounded-pill px-5 fw-bold">
+                    Start the Survey
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

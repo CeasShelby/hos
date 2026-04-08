@@ -8,7 +8,8 @@
         <div class="col-md-8">
             <div class="card bg-dark text-white border-0 shadow-lg" style="border-radius: 15px;">
                 <div class="card-body p-5">
-                    <h2 class="text-center fw-bold mb-5">Update Your Profile</h2>
+                    <h2 class="text-center fw-bold mb-2">Update Profile & Roommate Survey</h2>
+                    <p class="text-center text-muted mb-5"></p>
                     
                     {% if form.errors %}
                         <div class="alert alert-danger bg-danger text-white border-0 small">
@@ -59,6 +60,26 @@
                                     </label>
                                     {{ form.is_early_bird }}
                                 </div>
+
+                                <div class="mt-4 p-3 border rounded border-secondary">
+                                    <h6 class="text-info mb-3"><i class="fas fa-user-friends me-2"></i>Roommate Survey</h6>
+                                    <div class="mb-3 custom-field">
+                                        <label class="small text-muted">{{ form.smoking_habit.label }}</label>
+                                        {{ form.smoking_habit }}
+                                    </div>
+                                    <div class="mb-3 custom-field">
+                                        <label class="small text-muted">{{ form.smoking_weight.label }}</label>
+                                        {{ form.smoking_weight }}
+                                    </div>
+                                    <div class="mb-3 custom-field">
+                                        <label class="small text-muted">{{ form.study_time.label }}</label>
+                                        {{ form.study_time }}
+                                    </div>
+                                    <div class="mb-0 custom-field">
+                                        <label class="small text-muted">{{ form.study_weight.label }}</label>
+                                        {{ form.study_weight }}
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -78,25 +99,75 @@
     /* Styling to match your underlined reference */
     .custom-field {
         border-bottom: 1px solid #495057;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
     }
     .custom-field input, .custom-field select, .custom-field textarea {
-        background: transparent !important;
-        border: none !important;
-        color: white !important;
+        background: #fff !important;
+        border: 1px solid #bbb !important;
+        color: #222 !important;
         width: 100%;
-        padding: 8px 0;
+        padding: 6px 14px;
         outline: none !important;
+        font-size: 1rem;
+        min-height: 40px;
+        border-radius: 2rem !important; /* Beautiful curve */
+        box-shadow: 0 2px 8px rgba(30,40,60,0.07);
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .custom-field select:focus, .custom-field input:focus, .custom-field textarea:focus {
+        border-color: #38ef7d !important;
+        box-shadow: 0 0 0 2px #38ef7d33;
+        background: #f8fff8 !important;
+    }
+    .custom-field select option {
+        background: #fff !important;
+        color: #222 !important;
+        border-radius: 1.5rem !important;
+    }
+    .custom-field select::-ms-expand {
+        display: none;
+    }
+    .custom-field select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url('data:image/svg+xml;utf8,<svg fill="%2338ef7d" height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7.293 7.293a1 1 0 011.414 0L10 8.586l1.293-1.293a1 1 0 111.414 1.414l-2 2a1 1 0 01-1.414 0l-2-2a1 1 0 010-1.414z"/></svg>');
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 1.2rem;
+        padding-right: 2.5rem;
     }
     .btn-registration {
         background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%);
         border-radius: 50px;
         border: none;
         letter-spacing: 1px;
+        margin-top: 1.5rem;
     }
     .form-check-input:checked {
         background-color: #38ef7d;
         border-color: #38ef7d;
+    }
+    .card-body.p-5 {
+        padding: 1.5rem !important;
+    }
+    .row > .col-md-6 {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+    .row {
+        margin-left: -8px;
+        margin-right: -8px;
+    }
+    @media (max-width: 768px) {
+        .row > .col-md-6 {
+            padding-left: 0;
+            padding-right: 0;
+        }
+        .card-body.p-5 {
+            padding: 0.7rem !important;
+        }
     }
 </style>
 {% endblock %}

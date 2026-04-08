@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+    .survey-section {
+        margin-bottom: 2rem;
+    }
+    .survey-label {
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+        color: #b8e994;
+    }
+    .survey-form-row {
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+    .survey-form-col {
+        flex: 1 1 220px;
+        min-width: 220px;
+        margin-bottom: 1.5rem;
+    }
+    .survey-form-col select, .survey-form-col input, .survey-form-col textarea {
+        background: #fff !important;
+        color: #222 !important;
+        border-radius: 8px;
+        border: 1px solid #bbb !important;
+        width: 100%;
+        padding: 8px 12px;
+        margin-top: 0.2rem;
+        font-size: 1rem;
+    }
+    .survey-form-col select:focus {
+        background: #fff !important;
+        color: #222 !important;
+    }
+    .survey-form-col option {
+        background: #fff !important;
+        color: #222 !important;
+    }
+    @media (max-width: 768px) {
+        .survey-form-row { flex-direction: column; gap: 0; }
+        .survey-form-col { min-width: 100%; }
+    }
+</style>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card bg-dark text-white border-secondary shadow-lg" style="border-radius: 20px;">
+                <div class="card-body p-4 p-md-5">
+                    <h2 class="fw-bold mb-4 text-center">Roommate Preference Survey</h2>
+                    <p class="text-muted text-center mb-4">Your answers help our algorithm find your most stable match.</p>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="survey-section">
+                            <div class="survey-form-row">
+                                {% for field in form %}
+                                <div class="survey-form-col">
+                                    <label class="survey-label">{{ field.label }}</label>
+                                    {{ field }}
+                                    {% if field.help_text %}
+                                    <div class="form-text text-muted small">{{ field.help_text }}</div>
+                                    {% endif %}
+                                    {% for error in field.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-info w-100 rounded-pill py-2 mt-3 fw-bold">
+                            Save & Generate My Match
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

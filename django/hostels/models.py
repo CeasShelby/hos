@@ -33,10 +33,33 @@ class Booking(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
     hostel = models.ForeignKey(Hostel, on_delete=models.CASCADE) # Now it can see 'Hostel'
     booked_at = models.DateTimeField(auto_now_add=True)
+    ROOM_TYPE_CHOICES = [
+        ('single', 'Single Room'),
+        ('double', 'Double Room'),
+    ]
     status = models.CharField(max_length=20, default='Pending')
+    room_type = models.CharField(max_length=10, choices=ROOM_TYPE_CHOICES, default='single')
+    wants_roommate = models.BooleanField(
+        default=False,
+        help_text="Only relevant for double rooms",
+    )
 
     def __str__(self):
         return f"{self.student.username} - {self.hostel.name}"
 
    
     
+class RoommateProposal(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('accepted', 'Accepted'),
+        ('declined', 'Declined'),
+    ]
+    
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_proposals')
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_proposals')
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('sender', 'receiver') # Prevents duplicate spam

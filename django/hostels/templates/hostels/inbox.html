@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5">
+    <h2 class="text-white mb-4"><i class="fas fa-inbox me-2"></i>Roommate Requests</h2>
+    
+    <div class="row">
+        {% for prop in proposals %}
+        <div class="col-md-6 mb-3">
+            <div class="card bg-dark text-white border-info shadow">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-0">{{ prop.sender.username }}</h5>
+                        <small class="text-muted">Sent {{ prop.created_at|timesince }} ago</small>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'handle_proposal' prop.id 'accept' %}" class="btn btn-success btn-sm rounded-pill px-3">Accept</a>
+                        <a href="{% url 'handle_proposal' prop.id 'decline' %}" class="btn btn-outline-danger btn-sm rounded-pill px-3">Decline</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <p class="text-muted">Your inbox is empty. Try sending a proposal to your stable match!</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
