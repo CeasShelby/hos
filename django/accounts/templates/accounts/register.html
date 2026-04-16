@@ -146,7 +146,7 @@
 <div class="register-card">
     <div class="register-title">Create Account</div>
 
-    <form method="POST">
+    <form method="POST" autocomplete="off">
         {% csrf_token %}
 
         {% for field in form %}

@@ -5,7 +5,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .form import RegisterForm
 from .models import Profile 
-from hostels.models import Booking
+from hostels.models import Booking, RoommateProposal
+from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from .form import CombinedProfilePreferenceForm
 # Create your views here.
@@ -69,7 +70,42 @@ def login_view(request):
 
 
 @login_required
+def view_profile(request):
+    profile, created = Profile.objects.get_or_create(user=request.user)
+    
+    # Check if matched
+    is_matched = RoommateProposal.objects.filter(
+        (Q(sender=request.user) | Q(receiver=request.user)),
+        status='accepted'
+    ).exists()
+    
+    return render(request, 'accounts/profile.html', {
+        'profile': profile,
+        'is_matched': is_matched
+    })
+
+@login_required
 def edit_profile(request):
+    # Check if already matched - LOCK PROFILE
+    is_matched = RoommateProposal.objects.filter(
+        (Q(sender=request.user) | Q(receiver=request.user)),
+        status='accepted'
+    ).exists()
+    
+    if is_matched:
+        messages.warning(request, "You have already been matched with a roommate. Profile editing is now disabled.")
+        return redirect('profile')
+
+    # Requirement: No booking = No survey
+    booked_hostel = Booking.objects.filter(
+        student=request.user,
+        status__in=['Pending', 'Paid'],
+    ).exists()
+    
+    if not booked_hostel:
+        messages.info(request, "You need to book a hostel before you can fill in the roommate survey.")
+        return redirect('hostel-index')
+
     profile, created = Profile.objects.get_or_create(user=request.user)
     
     if request.method == 'POST':

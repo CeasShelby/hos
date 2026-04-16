@@ -179,6 +179,10 @@
                                         <div>
                                             <h6 class="match-name">{{ match.user.username }}</h6>
                                             <div class="match-course">{{ match.details.course }}</div>
+                                            <div class="small text-muted opacity-75 mt-1">
+                                                <i class="fas fa-venus-mars me-1"></i> {{ match.details.gender|title }} &nbsp; 
+                                                <i class="fas fa-birthday-cake me-1"></i> {{ match.details.age }} years
+                                            </div>
                                         </div>
                                         <div class="score-text">{{ match.score }}%</div>
                                     </div>

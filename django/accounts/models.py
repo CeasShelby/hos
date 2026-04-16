@@ -7,6 +7,14 @@ from django.contrib.auth.models import User
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
+    GENDER_CHOICES = [
+        ('male', 'Male'),
+        ('female', 'Female'),
+        ('other', 'Other'),
+    ]
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES, blank=True, default='')
+    age = models.PositiveIntegerField(null=True, blank=True)
+
     phone = models.CharField(max_length=15, blank=True, null=True)
     is_early_bird = models.BooleanField(default=True)
     smoking_habit = models.IntegerField(default=0) # 1: Non-smoker, 5: Heavy

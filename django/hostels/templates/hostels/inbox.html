@@ -4,26 +4,62 @@
     <h2 class="text-white mb-4"><i class="fas fa-inbox me-2"></i>Roommate Requests</h2>
     
     <div class="row">
-        {% for prop in proposals %}
-        <div class="col-md-6 mb-3">
-            <div class="card bg-dark text-white border-info shadow">
-                <div class="card-body d-flex justify-content-between align-items-center">
-                    <div>
-                        <h5 class="mb-0">{{ prop.sender.username }}</h5>
-                        <small class="text-muted">Sent {{ prop.created_at|timesince }} ago</small>
-                    </div>
-                    <div class="d-flex gap-2">
-                        <a href="{% url 'handle_proposal' prop.id 'accept' %}" class="btn btn-success btn-sm rounded-pill px-3">Accept</a>
-                        <a href="{% url 'handle_proposal' prop.id 'decline' %}" class="btn btn-outline-danger btn-sm rounded-pill px-3">Decline</a>
+        <div class="col-12 mb-5">
+            <h4 class="text-info mb-4 border-bottom border-secondary pb-2">Incoming Requests</h4>
+            <div class="row">
+                {% for prop in proposals %}
+                <div class="col-md-6 mb-3">
+                    <div class="card bg-dark text-white border-info shadow">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-0">{{ prop.sender.username }}</h5>
+                                <small class="text-muted">Sent {{ prop.created_at|timesince }} ago</small>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'handle_proposal' prop.id 'accept' %}" class="btn btn-success btn-sm rounded-pill px-3">Accept</a>
+                                <a href="{% url 'handle_proposal' prop.id 'decline' %}" class="btn btn-outline-danger btn-sm rounded-pill px-3">Decline</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                {% empty %}
+                <div class="col-12 py-3">
+                    <p class="text-muted">No new requests.</p>
+                </div>
+                {% endfor %}
             </div>
         </div>
-        {% empty %}
-        <div class="col-12 text-center py-5">
-            <p class="text-muted">Your inbox is empty. Try sending a proposal to your stable match!</p>
+
+        <div class="col-12">
+            <h4 class="text-info mb-4 border-bottom border-secondary pb-2">Sent Proposals (Feedback)</h4>
+            <div class="row">
+                {% for prop in sent_proposals %}
+                <div class="col-md-6 mb-3">
+                    <div class="card bg-dark text-white border-opacity-25 shadow-sm" style="border: 1px solid rgba(255,255,255,0.1)">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-0">{{ prop.receiver.username }}</h5>
+                                <small class="text-muted">Requested {{ prop.created_at|timesince }} ago</small>
+                            </div>
+                            <div>
+                                {% if prop.status == 'accepted' %}
+                                    <span class="badge bg-success rounded-pill px-3 py-2"><i class="fas fa-check-circle me-1"></i> Accepted</span>
+                                {% elif prop.status == 'declined' %}
+                                    <span class="badge bg-danger rounded-pill px-3 py-2"><i class="fas fa-times-circle me-1"></i> Declined</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark rounded-pill px-3 py-2"><i class="fas fa-clock me-1"></i> Pending</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12 py-3">
+                    <p class="text-muted">You haven't sent any proposals yet.</p>
+                </div>
+                {% endfor %}
+            </div>
         </div>
-        {% endfor %}
     </div>
 </div>
 {% endblock %}

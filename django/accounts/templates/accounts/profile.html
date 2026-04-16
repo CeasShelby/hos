@@ -3,101 +3,98 @@
 {% block content %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-    <div class="col-md-5">
-        <div class="card bg-transparent border-0">
-            <div class="card-body p-4">
-                <h1 class="text-center fw-bold mb-5 text-white">Update Profile</h1>
-                
-                <form method="POST">
-                    {% csrf_token %}
-                    
-                    <div class="mb-4 custom-input-group">
-                        <i class="fas fa-map-marker-alt icon"></i>
-                        {{ form.region }}
-                        <label class="floating-label">Home Region/District</label>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <!-- Premium Glassmorphism Profile Card -->
+            <div class="card bg-dark text-white border-0 shadow-lg" style="border-radius: 24px; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px);">
+                <div class="card-body p-5">
+                    <div class="text-center mb-5">
+                        <div class="d-inline-block p-3 rounded-circle bg-gradient-primary mb-3">
+                            <i class="fas fa-user-circle fa-4x text-white"></i>
+                        </div>
+                        <h2 class="fw-bold mb-1">{{ profile.user.first_name }} {{ profile.user.last_name }}</h2>
+                        <p class="text-info opacity-75">@{{ profile.user.username }}</p>
                     </div>
 
-                    <div class="mb-4 custom-input-group">
-                        <i class="fas fa-pray icon"></i>
-                        {{ form.religion }}
-                        <label class="floating-label">Religion</label>
+                    <div class="row g-4">
+                        <!-- Left Column: Basics -->
+                        <div class="col-md-6 pe-md-4 border-end border-secondary border-opacity-25">
+                            <div class="mb-4">
+                                <label class="small text-muted d-block mb-1"><i class="fas fa-venus-mars me-2"></i>Gender</label>
+                                <span class="fs-5">{{ profile.gender|title|default:"Not set" }}</span>
+                            </div>
+                            <div class="mb-4">
+                                <label class="small text-muted d-block mb-1"><i class="fas fa-birthday-cake me-2"></i>Age</label>
+                                <span class="fs-5">{{ profile.age|default:"Not set" }} years</span>
+                            </div>
+                            <div class="mb-4">
+                                <label class="small text-muted d-block mb-1"><i class="fas fa-graduation-cap me-2"></i>Course</label>
+                                <span class="fs-5">{{ profile.course|default:"Not set" }}</span>
+                            </div>
+                            <div class="mb-4">
+                                <label class="small text-muted d-block mb-1"><i class="fas fa-phone me-2"></i>Phone</label>
+                                <span class="fs-5">{{ profile.phone|default:"Not set" }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Preferences -->
+                        <div class="col-md-6 ps-md-4">
+                            <div class="mb-4">
+                                <label class="small text-muted d-block mb-1"><i class="fas fa-map-marker-alt me-2"></i>Region</label>
+                                <span class="fs-5">{{ profile.region|default:"Not set" }}</span>
+                            </div>
+                            <div class="mb-4">
+                                <label class="small text-muted d-block mb-1"><i class="fas fa-pray me-2"></i>Religion</label>
+                                <span class="fs-5">{{ profile.religion|default:"Not set" }}</span>
+                            </div>
+                            <div class="mb-4">
+                                <label class="small text-muted d-block mb-1"><i class="fas fa-broom me-2"></i>Cleanliness</label>
+                                <span class="fs-5">{{ profile.get_cleanliness_display|default:"Average" }}</span>
+                            </div>
+                            <div class="mb-4">
+                                <label class="small text-muted d-block mb-1"><i class="fas fa-heart me-2"></i>Hobbies</label>
+                                <p class="small text-white-50">{{ profile.hobbies|default:"No hobbies listed" }}</p>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="mb-4 custom-input-group">
-                        <i class="fas fa-heart icon"></i>
-                        {{ form.hobbies }}
-                        <label class="floating-label">Hobbies (Football, Gaming, etc.)</label>
+                    <div class="text-center mt-5 pt-4 border-top border-secondary border-opacity-25">
+                        {% if is_matched %}
+                            <div class="alert alert-success rounded-pill px-5 py-3 d-inline-block fw-bold border-0 shadow" style="background: rgba(56, 239, 125, 0.1); color: #38ef7d;">
+                                <i class="fas fa-check-circle me-2"></i> VERIFIED MATCH FINALIZED
+                            </div>
+                            <p class="small text-muted mt-2">Preferred roommate confirmed. Profile editing is now locked.</p>
+                        {% else %}
+                            <a href="{% url 'edit-profile' %}" class="btn btn-gradient-primary px-5 py-3 rounded-pill fw-bold">
+                                <i class="fas fa-edit me-2"></i> EDIT PROFILE & SURVEY
+                            </a>
+                        {% endif %}
                     </div>
-
-                    <div class="mb-4 custom-input-group">
-                        <i class="fas fa-broom icon"></i>
-                        {{ form.cleanliness }}
-                    </div>
-
-                    <button type="submit" class="btn btn-gradient w-100 py-3 mt-4">
-                        UPDATE PREFERENCES
-                    </button>
-                </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <style>
-    /* Styling to match your reference image */
-    .custom-input-group {
-        position: relative;
-        border-bottom: 1.5px solid #6c757d; /* Thin bottom border */
-        display: flex;
-        align-items: center;
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
     }
-
-    .custom-input-group .icon {
-        color: #adb5bd;
-        margin-right: 15px;
-        font-size: 1.1rem;
-    }
-
-    .custom-input-group input, .custom-input-group select, .custom-input-group textarea {
-        background: transparent !important;
-        border: none !important;
-        color: white !important;
-        width: 100%;
-        padding: 10px 0;
-        outline: none;
-    }
-
-    /* Floating label effect */
-    .floating-label {
-        position: absolute;
-        left: 35px;
-        top: 10px;
-        color: #6c757d;
-        transition: 0.3s ease all;
-        pointer-events: none;
-    }
-
-    /* Move label up when typing */
-    input:focus ~ .floating-label, input:not(:placeholder-shown) ~ .floating-label {
-        top: -15px;
-        font-size: 0.8rem;
-        color: #00c6ff;
-    }
-
-    /* Gradient button like your image */
-    .btn-gradient {
-        background: linear-gradient(90deg, #3a6073 0%, #3ca55c 100%);
+    .btn-gradient-primary {
+        background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%);
         border: none;
-        border-radius: 50px;
         color: white;
-        font-weight: bold;
         transition: 0.3s;
+        letter-spacing: 0.5px;
     }
-
-    .btn-gradient:hover {
-        transform: scale(1.02);
-        opacity: 0.9;
+    .btn-gradient-primary:hover {
+        transform: scale(1.05);
+        color: white;
+        box-shadow: 0 10px 20px rgba(56, 239, 125, 0.2);
+    }
+    .border-end {
+        border-right: 1px solid rgba(255,255,255,0.1) !important;
     }
 </style>
 {% endblock %}

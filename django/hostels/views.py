@@ -94,7 +94,8 @@ def book_hostel(request, pk):
     booking.save()
 
     if booking.room_type == 'double' and booking.wants_roommate:
-        return redirect('update_preferences')
+        messages.success(request, "Booking successful! Now, please complete your roommate preference survey to find your match.")
+        return redirect('edit-profile')
 
     messages.success(request, "Booking saved. You can view your bookings anytime.")
     return redirect('my-bookings')
@@ -167,7 +168,12 @@ def hostel_recommendations(request):
         })
 
     # Check if the survey is incomplete (Cold Start check)
-    is_incomplete = (my_profile.smoking_habit == 0 or my_profile.study_time == 0)
+    is_incomplete = (
+        my_profile.smoking_habit == 0
+        or my_profile.study_time == 0
+        or not my_profile.gender
+        or not my_profile.age
+    )
     
     if is_incomplete:
         # We send them to the same page, but with a 'survey_needed' flag
@@ -201,10 +207,12 @@ def hostel_recommendations(request):
         .distinct()
     )
 
+    # Only load participants of the SAME gender as the current user
     participants = list(
         Profile.objects.filter(user_id__in=roommate_user_ids)
         .exclude(smoking_habit=0)
         .exclude(study_time=0)
+        .filter(gender=my_profile.gender)   # ← same-gender filter
     )
     
     def compatibility_details(source_profile, target_profile):
@@ -399,9 +407,15 @@ def proposals_inbox(request):
         receiver=request.user, 
         status='pending'
     ).order_by('-created_at')
+
+    # Get all proposals where the current user is the sender (for feedback)
+    sent_proposals = RoommateProposal.objects.filter(
+        sender=request.user
+    ).order_by('-created_at')
     
     return render(request, 'hostels/inbox.html', {
-        'proposals': incoming_proposals
+        'proposals': incoming_proposals,
+        'sent_proposals': sent_proposals
     })
 
 @login_required

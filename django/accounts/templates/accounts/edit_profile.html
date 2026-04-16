@@ -23,6 +23,14 @@
                         <div class="row">
                             <div class="col-md-6 pe-md-4 border-end border-secondary">
                                 <div class="mb-4 custom-field">
+                                    <label class="small text-muted"><i class="fas fa-venus-mars me-2"></i>Gender</label>
+                                    {{ form.gender }}
+                                </div>
+                                <div class="mb-4 custom-field">
+                                    <label class="small text-muted"><i class="fas fa-birthday-cake me-2"></i>Age</label>
+                                    {{ form.age }}
+                                </div>
+                                <div class="mb-4 custom-field">
                                     <label class="small text-muted"><i class="fas fa-graduation-cap me-2"></i>Course of Study</label>
                                     {{ form.course }}
                                 </div>
@@ -54,11 +62,13 @@
                                     {{ form.hobbies }}
                                 </div>
                                 
-                                <div class="form-check form-switch mt-4 p-3 border rounded border-secondary">
-                                    <label class="form-check-label small text-white" for="id_is_early_bird">
+                                <div class="mt-4 p-3 border rounded border-secondary d-flex justify-content-between align-items-center overflow-hidden" style="min-height: 70px;">
+                                    <label class="form-check-label small text-white mb-0 d-flex align-items-center" for="id_is_early_bird">
                                         <i class="fas fa-sun me-2 text-warning"></i>Are you an Early Bird?
                                     </label>
-                                    {{ form.is_early_bird }}
+                                    <div class="form-check form-switch mb-0 p-0 d-flex align-items-center">
+                                        {{ form.is_early_bird }}
+                                    </div>
                                 </div>
 
                                 <div class="mt-4 p-3 border rounded border-secondary">

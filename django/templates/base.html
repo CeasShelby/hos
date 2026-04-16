@@ -8,6 +8,7 @@
     <title>LinkStay</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
         :root {
@@ -163,7 +164,8 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end bg-white border-secondary mt-2 shadow"
                             aria-labelledby="navbarDropdown" style="border-radius: 15px;">
-                            <li><a class="dropdown-item text-dark" href="{% url 'edit-profile' %}">Edit Profile</a></li>
+                            <li><a class="dropdown-item text-dark" href="{% url 'profile' %}">View Profile</a></li>
+                            <li><a class="dropdown-item text-dark" href="{% url 'edit-profile' %}">Edit Profile & Survey</a></li>
                             <li>
                                 <hr class="dropdown-divider border-secondary">
                             </li>
