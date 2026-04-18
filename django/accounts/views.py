@@ -92,23 +92,26 @@ def edit_profile(request):
         status='accepted'
     ).exists()
     
-    if is_matched:
-        messages.warning(request, "You have already been matched with a roommate. Profile editing is now disabled.")
-        return redirect('profile')
-
-    # Requirement: No booking = No survey
-    booked_hostel = Booking.objects.filter(
-        student=request.user,
-        status__in=['Pending', 'Paid'],
-    ).exists()
+    # We no longer redirect; we let them see the page but it will be read-only in the template
     
-    if not booked_hostel:
-        messages.info(request, "You need to book a hostel before you can fill in the roommate survey.")
-        return redirect('hostel-index')
+    # Requirement: No booking = No survey (only if not matched)
+    if not is_matched:
+        booked_hostel = Booking.objects.filter(
+            student=request.user,
+            status__in=['Pending', 'Paid'],
+        ).exists()
+        
+        if not booked_hostel:
+            messages.info(request, "You need to book a hostel before you can fill in the roommate survey.")
+            return redirect('hostel-index')
 
     profile, created = Profile.objects.get_or_create(user=request.user)
     
     if request.method == 'POST':
+        if is_matched:
+            messages.error(request, "Your profile is locked because you have already been matched.")
+            return redirect('edit-profile')
+            
         form = CombinedProfilePreferenceForm(request.POST, instance=profile)
         if form.is_valid():
             form.save()
@@ -120,7 +123,10 @@ def edit_profile(request):
     else:
         form = CombinedProfilePreferenceForm(instance=profile)
         
-    return render(request, 'accounts/edit_profile.html', {'form': form})
+    return render(request, 'accounts/edit_profile.html', {
+        'form': form,
+        'is_matched': is_matched
+    })
 
 def logout_view(request):
     logout(request)

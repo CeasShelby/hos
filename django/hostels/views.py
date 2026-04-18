@@ -67,12 +67,34 @@ def add_hostel(request):
 def hostel_detail(request, pk):
     hostel = get_object_or_404(Hostel, pk=pk)
     booking_form = BookingForm()
-    return render(request, 'hostels/detail.html', {'hostel': hostel, 'booking_form': booking_form})
+    
+    is_matched = False
+    if request.user.is_authenticated:
+        is_matched = RoommateProposal.objects.filter(
+            (Q(sender=request.user) | Q(receiver=request.user)),
+            status='accepted'
+        ).exists()
+
+    return render(request, 'hostels/detail.html', {
+        'hostel': hostel, 
+        'booking_form': booking_form,
+        'is_matched': is_matched
+    })
 
 
 
 @login_required
 def book_hostel(request, pk):
+    # Check if already matched - PREVENT booking
+    is_matched = RoommateProposal.objects.filter(
+        (Q(sender=request.user) | Q(receiver=request.user)),
+        status='accepted'
+    ).exists()
+    
+    if is_matched:
+        messages.error(request, "You have already been matched with a roommate and cannot book another hostel.")
+        return redirect('my-bookings')
+
     hostel = get_object_or_404(Hostel, pk=pk)
 
     if request.method != 'POST':
@@ -216,37 +238,84 @@ def hostel_recommendations(request):
     )
     
     def compatibility_details(source_profile, target_profile):
+        # 1. PRIORITY HABITS (Weighted Similarity)
+        # ----------------------------------------
+        
+        # Drinking
+        drink_sim = 5 - abs(source_profile.drinking_habit - target_profile.drinking_habit)
+        drink_score = drink_sim * max(source_profile.drinking_weight, 1)
+
+        # Noise Level
+        noise_sim = 5 - abs(source_profile.noise_habit - target_profile.noise_habit)
+        noise_score = noise_sim * max(source_profile.noise_weight, 1)
+
+        # Religious Practice Style
+        rel_style_sim = 5 if source_profile.religion_habit == target_profile.religion_habit else 1
+        rel_score = rel_style_sim * max(source_profile.religion_weight, 1)
+
+        # Cleanliness (Map choices to numeric for similarity)
+        clean_map = {'neat': 5, 'average': 3, 'relaxed': 1}
+        s_clean = clean_map.get(source_profile.cleanliness, 3)
+        t_clean = clean_map.get(target_profile.cleanliness, 3)
+        clean_sim = 5 - abs(s_clean - t_clean)
+        clean_score = clean_sim * max(source_profile.cleanliness_weight, 1)
+
+        # Smoking (Existing secondary priority)
         smoke_sim = 5 - abs(source_profile.smoking_habit - target_profile.smoking_habit)
-        study_sim = 5 - abs(source_profile.study_time - target_profile.study_time)
+        smoke_score = smoke_sim * max(source_profile.smoking_weight, 1)
 
-        smoke_weight = max(source_profile.smoking_weight, 1)
-        study_weight = max(source_profile.study_weight, 1)
-        base_score = (smoke_weight * smoke_sim) + (study_weight * study_sim)
+        priority_score = drink_score + noise_score + rel_score + clean_score + smoke_score
+        
+        # Max Priority Score: (4 priority fields * 5 sim * 5 max_weight) + (smoke * 5 * 5) = 125
+        # Actually it depends on user's own weights.
+        max_priority = (5 * max(source_profile.drinking_weight, 1)) + \
+                       (5 * max(source_profile.noise_weight, 1)) + \
+                       (5 * max(source_profile.religion_weight, 1)) + \
+                       (5 * max(source_profile.cleanliness_weight, 1)) + \
+                       (5 * max(source_profile.smoking_weight, 1))
 
+        # 2. SECONDARY HABITS (Fixed Bonuses)
+        # -----------------------------------
         bonus = 0
         shared_traits = []
-        if source_profile.cleanliness and source_profile.cleanliness == target_profile.cleanliness:
+
+        # Study Habits & Spot
+        study_time_sim = 5 - abs(source_profile.study_time - target_profile.study_time)
+        bonus += study_time_sim * source_profile.study_weight
+        if study_time_sim >= 4: shared_traits.append("Similar study hours")
+
+        if source_profile.study_spot == target_profile.study_spot:
             bonus += 8
-            shared_traits.append("Similar cleanliness")
-        if source_profile.study_habit and source_profile.study_habit == target_profile.study_habit:
+            shared_traits.append("Prefer same study spot")
+        
+        if source_profile.study_habit == target_profile.study_habit:
             bonus += 6
-            shared_traits.append("Study style match")
-        if source_profile.course and target_profile.course and source_profile.course.strip().lower() == target_profile.course.strip().lower():
-            bonus += 4
+            shared_traits.append("Compatible study style")
+
+        # Background & Lifestyle
+        if source_profile.course and source_profile.course.strip().lower() == target_profile.course.strip().lower():
+            bonus += 5
             shared_traits.append("Same course")
-        if source_profile.region and target_profile.region and source_profile.region.strip().lower() == target_profile.region.strip().lower():
-            bonus += 3
+        
+        if source_profile.region and source_profile.region.strip().lower() == target_profile.region.strip().lower():
+            bonus += 4
             shared_traits.append("Same home region")
-        if source_profile.religion and target_profile.religion and source_profile.religion.strip().lower() == target_profile.religion.strip().lower():
-            bonus += 2
-            shared_traits.append("Similar faith background")
+
+        if source_profile.visitors_habit and abs(source_profile.visitors_habit - target_profile.visitors_habit) <= 1:
+            bonus += 4
+            shared_traits.append("Similar visitor comfort")
+
         if source_profile.is_early_bird == target_profile.is_early_bird:
-            bonus += 2
+            bonus += 3
             shared_traits.append("Same day rhythm")
 
-        total_score = base_score + bonus
-        max_total_score = (smoke_weight * 5) + (study_weight * 5) + 25
-        score_percent = int((total_score / max_total_score) * 100) if max_total_score else 0
+        # 3. FINAL PERCENTAGE
+        # ------------------
+        total_score = priority_score + bonus
+        # Max possible bonus is approx 25 (study_time) + 8+6+5+4+4+3 = 55
+        max_total = max_priority + (5 * max(source_profile.study_weight, 1)) + 30
+        
+        score_percent = int((total_score / max_total) * 100) if max_total else 0
         score_percent = max(0, min(100, score_percent))
 
         return total_score, score_percent, shared_traits[:3]

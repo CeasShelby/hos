@@ -20,6 +20,13 @@ class RegisterForm(forms.ModelForm):
             'phone':forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'phone number'})
         }
 
+    # Validation for phone number (Strict 10 digits)
+    def clean_phone(self):
+        phone = self.cleaned_data.get('phone')
+        if not phone.isdigit() or len(phone) != 10:
+            raise forms.ValidationError("Please enter a valid 10-digit phone number (e.g., 0712345678).")
+        return phone
+
     def clean(self):
         cleaned_data = super().clean()
         password = cleaned_data.get('password')
@@ -45,7 +52,7 @@ class ProfileUpdateForm(forms.ModelForm):
         widgets = {
             'gender': forms.Select(attrs={'class': 'form-select'}),
             'age': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Your age', 'min': 16, 'max': 60}),
-            'phone': forms.TextInput(attrs={'class': 'form-control'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}),
             'religion': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. Christian, Muslim'}),
             'region': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. Central, Northern'}),
             'hobbies': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'What do you do for fun?'}),
@@ -92,6 +99,30 @@ HABIT_SCALE = [
     (5, '5 (Heavy)'),
 ]
 
+DRINKING_SCALE = [
+    (1, '1 (Never)'),
+    (2, '2 (Rarely)'),
+    (3, '3 (Occasionally)'),
+    (4, '4 (Socially)'),
+    (5, '5 (Regularly)'),
+]
+
+NOISE_SCALE = [
+    (1, '1 (Silent/Library)'),
+    (2, '2 (Quiet/Soft)'),
+    (3, '3 (Moderate)'),
+    (4, '4 (Lively/Music)'),
+    (5, '5 (Loud/Extroverted)'),
+]
+
+VISITOR_SCALE = [
+    (1, '1 (No visitors)'),
+    (2, '2 (Rarely)'),
+    (3, '3 (Occasionally)'),
+    (4, '4 (Frequently)'),
+    (5, '5 (Social Hub)'),
+]
+
 IMPORTANCE_SCALE = [
     (1, "1 (Don't care)"),
     (2, '2 (Minor)'),
@@ -112,33 +143,63 @@ class CombinedProfilePreferenceForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = [
-            'gender', 'age',
-            'phone', 'religion', 'region', 'hobbies',
-            'cleanliness', 'course', 'study_habit', 'is_early_bird',
-            'smoking_habit', 'smoking_weight', 'study_time', 'study_weight',
+            'gender', 'age', 'phone', 'religion', 'region', 'hobbies',
+            'course', 'is_early_bird',
+            'cleanliness', 'cleanliness_weight',
+            'smoking_habit', 'smoking_weight',
+            'drinking_habit', 'drinking_weight',
+            'religion_habit', 'religion_weight',
+            'noise_habit', 'noise_weight',
+            'study_time', 'study_weight',
+            'study_spot', 'study_habit', 'visitors_habit',
         ]
         widgets = {
             'gender': forms.Select(attrs={'class': 'form-select'}),
             'age': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Your age', 'min': 16, 'max': 60}),
-            'phone': forms.TextInput(attrs={'class': 'form-control'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}),
             'religion': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. Christian, Muslim'}),
             'region': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. Central, Northern'}),
-            'hobbies': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'What do you do for fun?'}),
-            'cleanliness': forms.Select(attrs={'class': 'form-select'}),
+            'hobbies': forms.Textarea(attrs={'class': 'form-control', 'rows': 2, 'placeholder': 'What do you do for fun?'}),
             'course': forms.TextInput(attrs={'class': 'form-control'}),
-            'study_habit': forms.Select(attrs={'class': 'form-select'}),
             'is_early_bird': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            
+            'cleanliness': forms.Select(attrs={'class': 'form-select'}),
+            'cleanliness_weight': forms.Select(choices=IMPORTANCE_SCALE, attrs={'class': 'form-select'}),
+            
             'smoking_habit': forms.Select(choices=HABIT_SCALE, attrs={'class': 'form-select'}),
             'smoking_weight': forms.Select(choices=IMPORTANCE_SCALE, attrs={'class': 'form-select'}),
+            
+            'drinking_habit': forms.Select(choices=DRINKING_SCALE, attrs={'class': 'form-select'}),
+            'drinking_weight': forms.Select(choices=IMPORTANCE_SCALE, attrs={'class': 'form-select'}),
+            
+            'religion_habit': forms.Select(attrs={'class': 'form-select'}),
+            'religion_weight': forms.Select(choices=IMPORTANCE_SCALE, attrs={'class': 'form-select'}),
+            
+            'noise_habit': forms.Select(choices=NOISE_SCALE, attrs={'class': 'form-select'}),
+            'noise_weight': forms.Select(choices=IMPORTANCE_SCALE, attrs={'class': 'form-select'}),
+            
             'study_time': forms.Select(choices=STUDY_TIME_CHOICES, attrs={'class': 'form-select'}),
             'study_weight': forms.Select(choices=IMPORTANCE_SCALE, attrs={'class': 'form-select'}),
+            
+            'study_spot': forms.Select(attrs={'class': 'form-select'}),
+            'study_habit': forms.Select(attrs={'class': 'form-select'}),
+            'visitors_habit': forms.Select(choices=VISITOR_SCALE, attrs={'class': 'form-select'}),
         }
         labels = {
-            'gender': 'Gender',
-            'age': 'Age',
-            'smoking_habit': "Are you a smoker?",
-            'smoking_weight': "How important is roommate's smoking habit?",
-            'study_time': "When do you study?",
-            'study_weight': "How important is sharing study schedule?",
             'is_early_bird': "Are you an Early Bird?",
-        }
+            'cleanliness': "Cleanliness Level",
+            'cleanliness_weight': "Importance of cleanliness",
+            'smoking_habit': "Do you smoke?",
+            'smoking_weight': "Importance of a non-smoking roommate",
+            'drinking_habit': "Do you drink?",
+            'drinking_weight': "Importance of a non-drinking roommate",
+            'religion_habit': "How do you practice your faith?",
+            'religion_weight': "Importance of same religious style",
+            'noise_habit': "Your noise level",
+            'noise_weight': "Importance of similar noise tolerance",
+            'study_time': "When do you study?",
+            'study_weight': "Importance of shared study schedule",
+            'study_spot': "Where do you prefer to study?",
+            'study_habit': "How do you study?",
+            'visitors_habit': "Frequency of visitors",
+        }

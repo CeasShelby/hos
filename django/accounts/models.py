@@ -15,15 +15,44 @@ class Profile(models.Model):
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES, blank=True, default='')
     age = models.PositiveIntegerField(null=True, blank=True)
 
+    RELIGIOUS_CHOICES = [
+        ('quietly', 'Quietly (Personal/Silent)'),
+        ('loud', 'Loud (Speaking/Chanting)'),
+        ('vocal', 'Vocal (Singing/Community)'),
+    ]
+    STUDY_SPOT_CHOICES = [
+        ('hostel', 'Hostel'),
+        ('library', 'Campus Library'),
+    ]
+
     phone = models.CharField(max_length=15, blank=True, null=True)
     is_early_bird = models.BooleanField(default=True)
-    smoking_habit = models.IntegerField(default=0) # 1: Non-smoker, 5: Heavy
+    
+    # Priority Habits & Weights
+    smoking_habit = models.IntegerField(default=0)
+    smoking_weight = models.IntegerField(default=1)
+    
+    drinking_habit = models.IntegerField(default=0)
+    drinking_weight = models.IntegerField(default=1)
+    
+    cleanliness_weight = models.IntegerField(default=1)
+    
+    religion_habit = models.CharField(max_length=20, choices=RELIGIOUS_CHOICES, default='quietly')
+    religion_weight = models.IntegerField(default=1)
+    
+    noise_habit = models.IntegerField(default=0)
+    noise_weight = models.IntegerField(default=1)
+
+    # Other Habits
     study_time = models.IntegerField(default=0)
-    smoking_weight = models.IntegerField(default=0)   # 1: Morning, 5: Late Night
+    study_weight = models.IntegerField(default=1)
+    study_spot = models.CharField(max_length=10, choices=STUDY_SPOT_CHOICES, default='hostel')
+    visitors_habit = models.IntegerField(default=0)
+    
     religion = models.CharField(max_length=50, blank=True)
     region = models.CharField(max_length=50, blank=True, help_text="Home Region/District")
     hobbies = models.TextField(blank=True, help_text="List a few things you love")
-    study_weight = models.IntegerField(default=0)   # 1: Low, 5: Critical
+    
     CLEAN_CHOICES = [
         ('neat', 'Very Neat/Organized'),
         ('average', 'Average'),

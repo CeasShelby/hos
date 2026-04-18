@@ -8,7 +8,7 @@ class HostelForm(forms.ModelForm):
             'name', 'description', 'price_per_semester', 
             'distance_from_campus', 'gender_type', 
             'is_self_contained', 'main_photo',
-            'is_quiet_environment', 'has_reading_room','room_phto', 'bath_photo', 'compound_photo'
+            'is_quiet_environment', 'has_reading_room','room_photo', 'bath_photo', 'compound_photo'
         ]
         # Adding Bootstrap classes to make it look like EstateHub
         widgets = {

@@ -95,7 +95,7 @@ WSGI_APPLICATION = 'my_website.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'my_django_db',
+        'NAME': 'linkstay_lite',
         'USER': 'root', 
         'PASSWORD': 'root',
         'HOST': 'localhost',

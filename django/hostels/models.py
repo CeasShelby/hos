@@ -24,7 +24,7 @@ class Hostel(models.Model):
     has_wifi = models.BooleanField(default=False)
     total_rooms = models.IntegerField(default=0) 
     available_rooms = models.IntegerField(default=0)
-    room_phto = models.ImageField(upload_to='hostels/room_photos/', blank=True, null=True)
+    room_photo = models.ImageField(upload_to='hostels/room_photos/', blank=True, null=True)
     bath_photo = models.ImageField(upload_to = 'hostels/bath_photos/', blank=True, null = True)
     compound_photo = models.ImageField(upload_to = 'hostels/compound_photos/', blank=True, null=True) 
 

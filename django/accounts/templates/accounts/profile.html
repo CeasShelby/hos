@@ -59,6 +59,49 @@
                         </div>
                     </div>
 
+                    <!-- Roommate Habits Section -->
+                    <div class="mt-5 p-4 rounded-4" style="background: rgba(0, 0, 0, 0.2);">
+                        <h5 class="fw-bold mb-4 text-info"><i class="fas fa-user-friends me-2"></i>Roommate Habits</h5>
+                        <div class="row g-4">
+                            <div class="col-sm-6 col-md-4">
+                                <div class="mb-3">
+                                    <label class="small text-muted d-block mb-1"><i class="fas fa-glass-martini-alt me-2"></i>Drinking</label>
+                                    <span class="small">{{ profile.drinking_habit }}/5</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-4">
+                                <div class="mb-3">
+                                    <label class="small text-muted d-block mb-1"><i class="fas fa-volume-up me-2"></i>Noise Level</label>
+                                    <span class="small">{{ profile.noise_habit }}/5</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-4">
+                                <div class="mb-3">
+                                    <label class="small text-muted d-block mb-1"><i class="fas fa-church me-2"></i>Religious Style</label>
+                                    <span class="small">{{ profile.get_religion_habit_display|default:"Personal" }}</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-4">
+                                <div class="mb-3">
+                                    <label class="small text-muted d-block mb-1"><i class="fas fa-book-reader me-2"></i>Study Spot</label>
+                                    <span class="small">{{ profile.get_study_spot_display|default:"Hostel" }}</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-4">
+                                <div class="mb-3">
+                                    <label class="small text-muted d-block mb-1"><i class="fas fa-users me-2"></i>Visitors</label>
+                                    <span class="small">{{ profile.visitors_habit }}/5</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-4">
+                                <div class="mb-3">
+                                    <label class="small text-muted d-block mb-1"><i class="fas fa-sun me-2"></i>Schedule</label>
+                                    <span class="small">{% if profile.is_early_bird %}Early Bird{% else %}Night Owl{% endif %}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="text-center mt-5 pt-4 border-top border-secondary border-opacity-25">
                         {% if is_matched %}
                             <div class="alert alert-success rounded-pill px-5 py-3 d-inline-block fw-bold border-0 shadow" style="background: rgba(56, 239, 125, 0.1); color: #38ef7d;">
