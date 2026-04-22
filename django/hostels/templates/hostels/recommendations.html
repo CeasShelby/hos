@@ -2,17 +2,32 @@
 {% block content %}
 <style>
     /* Premium Dark Glassmorphism UI */
-    .dashboard-container { 
+    .dashboard-container {
         height: calc(100vh - 110px);
-        padding: 20px 0; 
-        display: flex; 
+        padding: 20px 0;
+        display: flex;
         flex-direction: column;
     }
 
-    .header-title { font-weight: 700; font-size: 2.2rem; letter-spacing: -0.5px; opacity: 0.95; }
-    .hostel-subtitle { color: #00d2ff; font-weight: 500; font-size: 0.95rem; letter-spacing: 0.5px; opacity: 0.8; }
+    .header-title {
+        font-weight: 700;
+        font-size: 2.2rem;
+        letter-spacing: -0.5px;
+        opacity: 0.95;
+    }
 
-    .main-row { flex: 1; overflow: hidden; }
+    .hostel-subtitle {
+        color: #00d2ff;
+        font-weight: 500;
+        font-size: 0.95rem;
+        letter-spacing: 0.5px;
+        opacity: 0.8;
+    }
+
+    .main-row {
+        flex: 1;
+        overflow: hidden;
+    }
 
     /* Glassmorphism Cards */
     .glass-card {
@@ -28,21 +43,50 @@
         height: 100%;
         overflow: hidden;
     }
-    .glass-card:hover { border-color: rgba(255, 255, 255, 0.15); transform: translateY(-3px); }
 
-    .card-inner { padding: 28px; display: flex; flex-direction: column; height: 100%; overflow: hidden; }
+    .glass-card:hover {
+        border-color: rgba(255, 255, 255, 0.15);
+        transform: translateY(-3px);
+    }
 
-    .card-title-modern { 
-        font-size: 1.15rem; font-weight: 600; color: #fff; letter-spacing: 0.3px; 
-        margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px;
+    .card-inner {
+        padding: 28px;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .card-title-modern {
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: #fff;
+        letter-spacing: 0.3px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        padding-bottom: 15px;
         flex-shrink: 0;
     }
 
     /* Scrollable Inner Content */
-    .scrollable-content { flex: 1; overflow-y: auto; padding-right: 6px; }
-    .scrollable-content::-webkit-scrollbar { width: 6px; }
-    .scrollable-content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; }
-    .scrollable-content::-webkit-scrollbar-track { background: transparent; }
+    .scrollable-content {
+        flex: 1;
+        overflow-y: auto;
+        padding-right: 6px;
+    }
+
+    .scrollable-content::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .scrollable-content::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 10px;
+    }
+
+    .scrollable-content::-webkit-scrollbar-track {
+        background: transparent;
+    }
 
     /* Match Item List */
     .match-item {
@@ -53,17 +97,52 @@
         margin-bottom: 20px;
         transition: all 0.3s ease;
     }
-    .match-item:hover { background: rgba(0, 0, 0, 0.25); border-color: rgba(255, 255, 255, 0.1); transform: scale(1.01); }
+
+    .match-item:hover {
+        background: rgba(0, 0, 0, 0.25);
+        border-color: rgba(255, 255, 255, 0.1);
+        transform: scale(1.01);
+    }
 
     /* Modern Typography & Badges */
-    .match-name { font-size: 1.25rem; font-weight: 600; color: #fff; margin-bottom: 2px; }
-    .match-course { color: #00d2ff; font-size: 0.85rem; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px; }
-    
-    .score-text { font-size: 1.8rem; font-weight: 700; background: linear-gradient(90deg, #00f2fe 0%, #4facfe 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+    .match-name {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 2px;
+    }
 
-    .glow-progress-bg { height: 6px; background: rgba(255, 255, 255, 0.05); border-radius: 10px; margin: 20px 0; }
-    .glow-progress-bar { height: 100%; border-radius: 10px; background: linear-gradient(90deg, #00f2fe 0%, #4facfe 100%); box-shadow: 0 0 10px rgba(79, 172, 254, 0.6); }
-    
+    .match-course {
+        color: #00d2ff;
+        font-size: 0.85rem;
+        opacity: 0.9;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .score-text {
+        font-size: 1.8rem;
+        font-weight: 700;
+        background: linear-gradient(90deg, #00f2fe 0%, #4facfe 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .glow-progress-bg {
+        height: 6px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        margin: 20px 0;
+    }
+
+    .glow-progress-bar {
+        height: 100%;
+        border-radius: 10px;
+        background: linear-gradient(90deg, #00f2fe 0%, #4facfe 100%);
+        box-shadow: 0 0 10px rgba(79, 172, 254, 0.6);
+    }
+
     .trait-badge {
         background: rgba(255, 255, 255, 0.05);
         color: #d1d5db;
@@ -78,35 +157,85 @@
     /* Buttons */
     .btn-gradient-primary {
         background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
-        color: white; border: none; padding: 10px 24px; border-radius: 50px; font-weight: 500;
-        box-shadow: 0 4px 15px rgba(0, 210, 255, 0.3); transition: all 0.3s ease;
+        color: white;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 50px;
+        font-weight: 500;
+        box-shadow: 0 4px 15px rgba(0, 210, 255, 0.3);
+        transition: all 0.3s ease;
     }
-    .btn-gradient-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 210, 255, 0.4); color: white; }
-    
+
+    .btn-gradient-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 210, 255, 0.4);
+        color: white;
+    }
+
     .btn-gradient-danger {
         background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
-        color: white; border: none; padding: 8px 20px; border-radius: 50px; box-shadow: 0 4px 15px rgba(255, 65, 108, 0.3);
+        color: white;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 50px;
+        box-shadow: 0 4px 15px rgba(255, 65, 108, 0.3);
     }
-    .btn-gradient-danger:hover { box-shadow: 0 8px 20px rgba(255, 65, 108, 0.5); color: white; transform: translateY(-2px); }
+
+    .btn-gradient-danger:hover {
+        box-shadow: 0 8px 20px rgba(255, 65, 108, 0.5);
+        color: white;
+        transform: translateY(-2px);
+    }
 
     .btn-gradient-warning {
         background: linear-gradient(135deg, #fceabb 0%, #f8b500 100%);
-        color: #222; border: none; padding: 10px 24px; border-radius: 50px; font-weight: 500;
+        color: #222;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 50px;
+        font-weight: 500;
     }
 
     .btn-disabled-pill {
-        background: rgba(255, 255, 255, 0.05); color: #888; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 50px; font-weight: 500;
+        background: rgba(255, 255, 255, 0.05);
+        color: #888;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 50px;
+        font-weight: 500;
     }
 
     /* Status Alerts */
-    .status-alert { background: rgba(0, 210, 255, 0.05); border: 1px solid rgba(0, 210, 255, 0.2); border-radius: 16px; color: #e2e8f0; }
+    .status-alert {
+        background: rgba(0, 210, 255, 0.05);
+        border: 1px solid rgba(0, 210, 255, 0.2);
+        border-radius: 16px;
+        color: #e2e8f0;
+    }
 
     @media (max-width: 991px) {
-        .dashboard-container { height: auto; display: block; }
-        .main-row { overflow: visible; display: block; }
-        .col-lg-4, .col-lg-8 { height: auto !important; margin-bottom: 24px; }
-        .scrollable-content { overflow-y: visible; }
-        .glass-card { height: auto; }
+        .dashboard-container {
+            height: auto;
+            display: block;
+        }
+
+        .main-row {
+            overflow: visible;
+            display: block;
+        }
+
+        .col-lg-4,
+        .col-lg-8 {
+            height: auto !important;
+            margin-bottom: 24px;
+        }
+
+        .scrollable-content {
+            overflow-y: visible;
+        }
+
+        .glass-card {
+            height: auto;
+        }
     }
 </style>
 
@@ -118,7 +247,8 @@
             <div class="hostel-subtitle mt-2"> HOSTEL: {{ hostel.name|upper }}</div>
             {% endif %}
         </div>
-        <a href="{% url 'recommendations' %}" class="btn btn-sm btn-outline-light rounded-pill px-4 py-2 mt-3 mt-md-0" style="opacity: 0.8;">
+        <a href="{% url 'recommendations' %}" class="btn btn-sm btn-outline-light rounded-pill px-4 py-2 mt-3 mt-md-0"
+            style="opacity: 0.8;">
             <i class="fas fa-sync-alt me-2"></i> Refresh
         </a>
     </div>
@@ -131,35 +261,40 @@
                     <h5 class="card-title-modern">Match Status</h5>
                     <div class="scrollable-content">
                         {% if booking_needed %}
-                            <div class="status-alert p-3 mb-4 text-center">
-                                <p class="mb-3">You need at least one hostel booking before roommate matching can start.</p>
-                                <a href="{% url 'hostel-index' %}" class="btn btn-gradient-primary w-100">Browse Hostels</a>
-                            </div>
+                        <div class="status-alert p-3 mb-4 text-center">
+                            <p class="mb-3">You need at least one hostel booking before roommate matching can start.</p>
+                            <a href="{% url 'hostel-index' %}" class="btn btn-gradient-primary w-100">Browse Hostels</a>
+                        </div>
                         {% elif survey_needed %}
-                            <div class="status-alert p-3 mb-4 text-center">
-                                <p class="mb-3">Complete your preferences survey to generate a customized compatibility ranking.</p>
-                                <a href="{% url 'update_preferences' %}" class="btn btn-gradient-warning w-100">Complete Survey</a>
-                            </div>
+                        <div class="status-alert p-3 mb-4 text-center">
+                            <p class="mb-3">Complete your preferences survey to generate a customized compatibility
+                                ranking.</p>
+                            <a href="{% url 'update_preferences' %}" class="btn btn-gradient-warning w-100">Complete
+                                Survey</a>
+                        </div>
                         {% elif already_paired %}
-                            <div class="alert status-alert border-success p-4 text-center">
-                                <h4 class="text-success mb-2"><i class="fas fa-check-circle"></i> Paired!</h4>
-                                <p class="mb-0">You are successfully paired with <strong>{{ paired_partner.username }}</strong>. You are no longer visible in open matching lists.</p>
-                            </div>
+                        <div class="alert status-alert border-success p-4 text-center">
+                            <h4 class="text-success mb-2"><i class="fas fa-check-circle"></i> Paired!</h4>
+                            <p class="mb-0">You are successfully paired with <strong>{{ paired_partner.username
+                                    }}</strong>. You are no longer visible in open matching lists.</p>
+                        </div>
                         {% elif stable_match %}
-                            <div class="status-alert p-4 text-center mb-4">
-                                <div class="text-info mb-2"><i class="fas fa-star fa-2x"></i></div>
-                                <h6 class="text-white mb-1">Top Stable Match</h6>
-                                <h4 class="fw-bold text-white mb-3">{{ stable_match.user.username }}</h4>
-                                <p class="small opacity-75 mb-4">This pair is theoretically stable under current mutual preferences.</p>
-                                <form action="{% url 'send_proposal' stable_match.user.id %}" method="POST">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-gradient-primary w-100">Send Proposal</button>
-                                </form>
-                            </div>
+                        <div class="status-alert p-4 text-center mb-4">
+                            <div class="text-info mb-2"><i class="fas fa-star fa-2x"></i></div>
+                            <h6 class="text-white mb-1">Top Stable Match</h6>
+                            <h4 class="fw-bold text-white mb-3">{{ stable_match.user.username }}</h4>
+                            <p class="small opacity-75 mb-4">This pair is theoretically stable under current mutual
+                                preferences.</p>
+                            <form action="{% url 'send_proposal' stable_match.user.id %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-gradient-primary w-100">Send Proposal</button>
+                            </form>
+                        </div>
                         {% else %}
-                            <div class="status-alert p-4 text-center">
-                                <p class="mb-0 opacity-75">Survey complete. Waiting for more eligible students in your hostel to run the algorithm.</p>
-                            </div>
+                        <div class="status-alert p-4 text-center">
+                            <p class="mb-0 opacity-75">Survey complete. Waiting for more eligible students in your
+                                hostel to run the algorithm.</p>
+                        </div>
                         {% endif %}
                     </div>
                 </div>
@@ -173,59 +308,64 @@
                     <h5 class="card-title-modern">Compatibility Ranking</h5>
                     <div class="scrollable-content">
                         {% if not booking_needed and not survey_needed and not already_paired %}
-                            {% for match in matches %}
-                                <div class="match-item">
-                                    <div class="d-flex justify-content-between align-items-center flex-wrap">
-                                        <div>
-                                            <h6 class="match-name">{{ match.user.username }}</h6>
-                                            <div class="match-course">{{ match.details.course }}</div>
-                                            <div class="small text-muted opacity-75 mt-1">
-                                                <i class="fas fa-venus-mars me-1"></i> {{ match.details.gender|title }} &nbsp; 
-                                                <i class="fas fa-birthday-cake me-1"></i> {{ match.details.age }} years
-                                            </div>
-                                        </div>
-                                        <div class="score-text">{{ match.score }}%</div>
-                                    </div>
-
-                                    <div class="glow-progress-bg">
-                                        <div class="glow-progress-bar" style="width: {{ match.score }}%"></div>
-                                    </div>
-
-                                    <div class="d-flex flex-wrap gap-2 mb-4">
-                                        {% for trait in match.traits %}
-                                            <span class="trait-badge">{{ trait }}</span>
-                                        {% endfor %}
-                                    </div>
-
-                                    <div class="text-end mt-2">
-                                        {% if match.already_matched %}
-                                            <button class="btn btn-sm btn-disabled-pill px-4" disabled>Already Matched</button>
-                                        {% elif match.proposal_status == 'pending' %}
-                                            <button class="btn btn-sm btn-gradient-warning px-4 text-dark" disabled>Awaiting Response</button>
-                                        {% elif match.proposal_status == 'declined' %}
-                                            <form action="{% url 'send_proposal' match.user.id %}" method="POST" class="d-inline">
-                                                {% csrf_token %}
-                                                <button type="submit" class="btn btn-sm btn-gradient-danger px-4">Propose Again</button>
-                                            </form>
-                                        {% else %}
-                                            <form action="{% url 'send_proposal' match.user.id %}" method="POST" class="d-inline">
-                                                {% csrf_token %}
-                                                <button type="submit" class="btn btn-sm btn-gradient-primary px-4 shadow-none">Send Proposal</button>
-                                            </form>
-                                        {% endif %}
+                        {% for match in matches %}
+                        <div class="match-item">
+                            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                                <div>
+                                    <h6 class="match-name">{{ match.user.username }}</h6>
+                                    <div class="match-course">{{ match.details.course }}</div>
+                                    <div class="small text-muted opacity-75 mt-1">
+                                        <i class="fas fa-venus-mars me-1"></i> {{ match.details.gender|title }} &nbsp;
+                                        <i class="fas fa-birthday-cake me-1"></i> {{ match.details.age }} years &nbsp;
+                                        <i class="fas fa-heart me-1"></i> {{ match.details.hobbies }}
                                     </div>
                                 </div>
-                            {% empty %}
-                                <div class="text-center py-5">
-                                    <i class="fas fa-user-friends fa-3x mb-3 text-muted" style="opacity: 0.3;"></i>
-                                    <p class="text-muted mb-0">No highly compatible roommates found yet in your hostel.</p>
-                                </div>
-                            {% endfor %}
-                        {% else %}
-                            <div class="text-center py-5">
-                                <i class="fas fa-lock fa-3x mb-3 text-muted" style="opacity: 0.3;"></i>
-                                <p class="text-muted mb-0">Compatibility ranking will appear here once your account is fully ready for matching.</p>
+                                <div class="score-text">{{ match.score }}%</div>
                             </div>
+
+                            <div class="glow-progress-bg">
+                                <div class="glow-progress-bar" style="width: {{ match.score }}%"></div>
+                            </div>
+
+                            <div class="d-flex flex-wrap gap-2 mb-4">
+                                {% for trait in match.traits %}
+                                <span class="trait-badge">{{ trait }}</span>
+                                {% endfor %}
+                            </div>
+
+                            <div class="text-end mt-2">
+                                {% if match.already_matched %}
+                                <button class="btn btn-sm btn-disabled-pill px-4" disabled>Already Matched</button>
+                                {% elif match.proposal_status == 'pending' %}
+                                <button class="btn btn-sm btn-gradient-warning px-4 text-dark" disabled>Awaiting
+                                    Response</button>
+                                {% elif match.proposal_status == 'declined' %}
+                                <form action="{% url 'send_proposal' match.user.id %}" method="POST" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-gradient-danger px-4">Propose
+                                        Again</button>
+                                </form>
+                                {% else %}
+                                <form action="{% url 'send_proposal' match.user.id %}" method="POST" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-gradient-primary px-4 shadow-none">Send
+                                        Proposal</button>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-user-friends fa-3x mb-3 text-muted" style="opacity: 0.3;"></i>
+                            <p class="text-muted mb-0">No highly compatible roommates found yet in your hostel.</p>
+                        </div>
+                        {% endfor %}
+                        {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-lock fa-3x mb-3 text-muted" style="opacity: 0.3;"></i>
+                            <p class="text-muted mb-0">Compatibility ranking will appear here once your account is fully
+                                ready for matching.</p>
+                        </div>
                         {% endif %}
                     </div>
                 </div>

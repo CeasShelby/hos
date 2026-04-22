@@ -49,11 +49,14 @@ class Migration(migrations.Migration):
 
 
 def _add_columns_if_missing(apps, schema_editor):
-    """Add age / gender columns only when they don't already exist (SQLite-safe)."""
+    """Add age / gender columns only when they don't already exist."""
     connection = schema_editor.connection
     with connection.cursor() as cursor:
-        cursor.execute("PRAGMA table_info(accounts_profile)")
-        existing_columns = {row[1] for row in cursor.fetchall()}
+        try:
+            columns = connection.introspection.get_table_description(cursor, "accounts_profile")
+            existing_columns = {col.name for col in columns}
+        except Exception:
+            existing_columns = set()
 
         if 'age' not in existing_columns:
             cursor.execute(

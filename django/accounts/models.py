@@ -8,7 +8,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     GENDER_CHOICES = [
-        ('male', 'Male'),
+        ('male', 'Male'), # list item that contain tuple with value and presentation name (value, presentation_name)
         ('female', 'Female'),
         ('other', 'Other'),
     ]

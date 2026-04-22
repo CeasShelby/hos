@@ -16,6 +16,7 @@ class Hostel(models.Model):
     total_rooms = models.IntegerField()
     available_rooms = models.IntegerField()
     main_photo = models.ImageField(upload_to='hostels/')
+    logo = models.ImageField(upload_to='media/',blank=True, null=True) #the icon logo for the system
 
     
     # Feature: Student Interests Matching

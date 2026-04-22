@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LinkStay</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'logo/logo/logo_1.jpg' %}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -123,9 +124,15 @@
 
     <nav class="navbar navbar-expand-lg navbar-light navbar-floating">
         <div class="container-fluid">
+<<<<<<< HEAD
             <!-- Logo Branding Integration -->
             <a class="nav-brand-logo me-3" href="{% url 'hostel-index' %}" title="LinkStay Home">
                 <img src="{% static 'logo/logo/logo_1.jpg' %}" alt="LinkStay Logo">
+=======
+            <!-- Circular Brand Logo like the white planet icon in the request -->
+            <a class="nav-brand-circle me-3" href="{% url 'hostel-index' %}" title="HostelHub">
+                <!--- <img src="{% static 'media/linkstay.png' %}" alt="Logo"> --->
+>>>>>>> 53fae5eb9221a1365cf992b029951b939cfa26dd
             </a>
 
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -160,20 +167,92 @@
                             id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             {{ user.username|truncatechars:15 }}
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end bg-white border-secondary mt-2 shadow"
-                            aria-labelledby="navbarDropdown" style="border-radius: 15px;">
-                            <li><a class="dropdown-item text-dark" href="{% url 'profile' %}">View Profile</a></li>
-                            <li><a class="dropdown-item text-dark" href="{% url 'edit-profile' %}">Edit Profile & Survey</a></li>
-                            <li>
-                                <hr class="dropdown-divider border-secondary">
-                            </li>
-                            <li>
-                                <form action="{% url 'logout' %}" method="post" class="px-3">
-                                    {% csrf_token %}
-                                    <button type="submit"
-                                        class="dropdown-item text-danger p-0 bg-transparent">Logout</button>
-                                </form>
-                            </li>
+                        <ul class="dropdown-menu dropdown-menu-end bg-dark border-0 shadow-lg mt-2 p-0"
+                            aria-labelledby="navbarDropdown"
+                            style="border-radius: 20px; width: 400px; overflow: hidden; background: rgba(30, 35, 40, 0.95) !important; backdrop-filter: blur(10px);">
+                            <div class="card bg-transparent text-white border-0">
+                                <div class="card-body p-4">
+                                    <div class="text-center mb-4">
+                                        <div class="d-inline-block p-3 rounded-circle mb-3"
+                                            style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+                                            <i class="fas fa-user-circle fa-4x text-white"></i>
+                                        </div>
+                                        <h5 class="fw-bold mb-1">{{ user.first_name }} {{ user.last_name }}</h5>
+                                        <p class="text-info opacity-75 small mb-0">@{{ user.username }}</p>
+                                    </div>
+
+                                    <div class="row g-3 fs-6 mb-4">
+                                        <!-- Left Column -->
+                                        <div class="col-6 border-end border-secondary border-opacity-25">
+                                            <div class="mb-3">
+                                                <span class="small text-muted d-block"><i
+                                                        class="fas fa-venus-mars me-1"></i>Gender</span>
+                                                <strong class="text-white">{{ user.profile.gender|title|default:"Not
+                                                    set" }}</strong>
+                                            </div>
+                                            <div class="mb-3">
+                                                <span class="small text-muted d-block"><i
+                                                        class="fas fa-birthday-cake me-1"></i>Age</span>
+                                                <strong class="text-white">{{ user.profile.age|default:"Not set" }}
+                                                    years</strong>
+                                            </div>
+                                            <div class="mb-3">
+                                                <span class="small text-muted d-block"><i
+                                                        class="fas fa-graduation-cap me-1"></i>Course</span>
+                                                <strong class="text-white">{{ user.profile.course|default:"Not set"
+                                                    }}</strong>
+                                            </div>
+                                            <div>
+                                                <span class="small text-muted d-block"><i
+                                                        class="fas fa-phone me-1"></i>Phone</span>
+                                                <strong class="text-white">{{ user.profile.phone|default:"Not set"
+                                                    }}</strong>
+                                            </div>
+                                        </div>
+                                        <!-- Right Column -->
+                                        <div class="col-6 ps-3">
+                                            <div class="mb-3">
+                                                <span class="small text-muted d-block"><i
+                                                        class="fas fa-map-marker-alt me-1"></i>Region</span>
+                                                <strong class="text-white">{{ user.profile.region|default:"Not set"
+                                                    }}</strong>
+                                            </div>
+                                            <div class="mb-3">
+                                                <span class="small text-muted d-block"><i
+                                                        class="fas fa-pray me-1"></i>Religion</span>
+                                                <strong class="text-white">{{ user.profile.religion|default:"Not set"
+                                                    }}</strong>
+                                            </div>
+                                            <div class="mb-3">
+                                                <span class="small text-muted d-block"><i
+                                                        class="fas fa-broom me-1"></i>Cleanliness</span>
+                                                <strong class="text-white">{{
+                                                    user.profile.get_cleanliness_display|default:"Average" }}</strong>
+                                            </div>
+                                            <div>
+                                                <span class="small text-muted d-block"><i
+                                                        class="fas fa-heart me-1"></i>Hobbies</span>
+                                                <p class="small text-white-50 mb-0" style="line-height: 1.2;">{{
+                                                    user.profile.hobbies|default:"No hobbies listed"|truncatechars:35 }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-center mt-3 pt-3 border-top border-secondary border-opacity-25">
+                                        <a href="{% url 'edit-profile' %}"
+                                            class="btn w-100 rounded-pill fw-bold text-white mb-3 py-2"
+                                            style="background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%); border: none;">
+                                            <i class="fas fa-edit me-2"></i> EDIT PROFILE & SURVEY
+                                        </a>
+                                        <form action="{% url 'logout' %}" method="post">
+                                            {% csrf_token %}
+                                            <button type="submit"
+                                                class="btn btn-outline-danger w-100 rounded-pill py-2">Logout</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </ul>
                     </li>
                     {% else %}

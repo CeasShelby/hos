@@ -95,9 +95,13 @@ WSGI_APPLICATION = 'my_website.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
+<<<<<<< HEAD
         'NAME': 'linkstay_lite',
+=======
+        'NAME': 'Link_db',  #modified to suit the local database
+>>>>>>> 53fae5eb9221a1365cf992b029951b939cfa26dd
         'USER': 'root', 
-        'PASSWORD': 'root',
+        'PASSWORD': '',  #leave empty for db has no password
         'HOST': 'localhost',
         'PORT': '3306',
     }
